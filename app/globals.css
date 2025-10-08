@@ -4,33 +4,26 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Custom color palette for dark theme */
-  --color-dark-slate: #333446;
-  --color-slate-blue: #7f8caa;
-  --color-mint: #b8cfce;
-  --color-light: #eaefef;
-  --color-accent: #64b5f6;
-
-  /* Dark theme by default */
-  --background: #1a1b26;
-  --foreground: #eaefef;
-  --card: #333446;
-  --card-foreground: #eaefef;
-  --popover: #333446;
-  --popover-foreground: #eaefef;
-  --primary: #7f8caa;
-  --primary-foreground: #eaefef;
-  --secondary: #b8cfce;
-  --secondary-foreground: #333446;
-  --muted: #333446;
-  --muted-foreground: #7f8caa;
-  --accent: #64b5f6;
-  --accent-foreground: #1a1b26;
+  /* Updated light mode color palette */
+  --background: #f8fbff;
+  --foreground: #0a2647;
+  --card: #e6f0fa;
+  --card-foreground: #0a2647;
+  --popover: #e6f0fa;
+  --popover-foreground: #0a2647;
+  --primary: #2c74b3;
+  --primary-foreground: #f8fbff;
+  --secondary: #428dff;
+  --secondary-foreground: #f8fbff;
+  --muted: #e6f0fa;
+  --muted-foreground: #2c74b3;
+  --accent: #428dff;
+  --accent-foreground: #f8fbff;
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: #333446;
-  --input: #333446;
-  --ring: #7f8caa;
+  --border: #c9d8ea;
+  --input: #e6f0fa;
+  --ring: #428dff;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -45,6 +38,29 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+}
+
+/* Updated dark mode color palette */
+.dark {
+  --background: #0a2647;
+  --foreground: #eaf4ff;
+  --card: #144272;
+  --card-foreground: #eaf4ff;
+  --popover: #144272;
+  --popover-foreground: #eaf4ff;
+  --primary: #2c74b3;
+  --primary-foreground: #eaf4ff;
+  --secondary: #205295;
+  --secondary-foreground: #eaf4ff;
+  --muted: #144272;
+  --muted-foreground: #6daffe;
+  --accent: #6daffe;
+  --accent-foreground: #0a2647;
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --border: #1b3a5d;
+  --input: #144272;
+  --ring: #6daffe;
 }
 
 @theme inline {
