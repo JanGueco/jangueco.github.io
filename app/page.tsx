@@ -207,54 +207,85 @@ export default function Portfolio() {
 
   const projects = [
     {
-      title: "Real-time Analytics Dashboard",
+      title: "Shapes",
+      type: "Personal",
       summary:
-        "A comprehensive analytics platform processing real-time data streams with interactive visualizations.",
-      image: "/modern-analytics-dashboard.png",
-      techStack: ["React", "Node.js", "WebSocket", "Redis", "D3.js", "MongoDB"],
+        "A simple yet challenging game built with Python and Pygame where players control a shape to dodge oncoming obstacles. Later integrated NEAT for AI-driven autonomous gameplay.",
+      media: "/modern-analytics-dashboard.png",
+      techStack: ["Python", "Pygame", "NEAT"],
       learned: [
-        "Implementing efficient WebSocket connections for real-time updates",
-        "Optimizing React rendering for large datasets",
-        "Designing scalable backend architecture for high-throughput data",
+        "Game loop design and responsive event handling",
+        "Collision detection and animation logic",
+        "Applied NEAT (NeuroEvolution of Augmenting Topologies) for AI-based learning and automation",
       ],
+      bonusMedia: "/shapes-demo.mp4",
+      bonusNote:
+        "This was my first real taste of combining game logic with machine learning. Watching the AI learn to play was surprisingly fun!",
     },
     {
-      title: "Data Pipeline Orchestration System",
+      title: "Double Pendulum Simulation",
+      type: "Personal",
       summary:
-        "Automated data pipeline framework with monitoring, alerting, and self-healing capabilities.",
-      image: "/data-pipeline-workflow-diagram-with-nodes-and-conn.jpg",
-      techStack: [
-        "Python",
-        "Apache Airflow",
-        "Docker",
-        "PostgreSQL",
-        "Prometheus",
-        "Grafana",
-      ],
+        "A physics-based simulation of a double pendulum created using the Processing framework in Python. The setup includes a 'pen' attached to visualize the pendulum’s chaotic motion over time.",
+      media: "/data-pipeline-workflow-diagram-with-nodes-and-conn.jpg",
+      techStack: ["Python", "Processing"],
       learned: [
-        "Building fault-tolerant distributed systems",
-        "Implementing comprehensive monitoring and observability",
-        "Designing idempotent data processing workflows",
+        "How small changes in initial conditions cause drastically different results (chaos theory in action!)",
+        "Mathematical modeling of motion and gravity",
+        "Leveraging Processing for creating real-time physics visualizations",
       ],
+      bonusMedia: "/double-pendulum-drawing.mp4",
+      bonusNote:
+        "This project taught me how math and visuals can merge into something mesmerizing — even with a few typos causing ‘creative’ physics 😆",
     },
     {
-      title: "Machine Learning Model Deployment Platform",
+      title: "Pysort",
+      type: "Personal",
       summary:
-        "End-to-end ML platform for training, versioning, and deploying models at scale.",
-      image: "/machine-learning-platform-interface-with-model-met.jpg",
-      techStack: [
-        "Python",
-        "FastAPI",
-        "TensorFlow",
-        "MLflow",
-        "Kubernetes",
-        "AWS S3",
-      ],
+        "A simple automation script that organizes files in a directory into folders based on their file types — my first real taste of using Python to simplify daily tasks.",
+      media: "/machine-learning-platform-interface-with-model-met.jpg",
+      techStack: ["Python", "OS Module"],
       learned: [
-        "Containerizing ML models for production deployment",
-        "Implementing A/B testing for model versions",
-        "Managing model lifecycle and versioning strategies",
+        "File handling and directory management in Python",
+        "How automation can simplify repetitive tasks",
+        "Understanding the importance of clean, organized systems",
       ],
+      bonusMedia: "/pysort-script-demo.mp4",
+      bonusNote:
+        "One of those small scripts that made me realize — coding can literally make life easier.",
+    },
+    {
+      title: "YouTube to MP3 Converter",
+      type: "Personal",
+      summary:
+        "A desktop application that converts YouTube videos to MP3 using Pytube and PyQt6. The app features a simple graphical interface and handles downloads and file conversions seamlessly.",
+      media: "/machine-learning-platform-interface-with-model-met.jpg",
+      techStack: ["Python", "Pytube", "PyQt6"],
+      learned: [
+        "How GUI applications work and how event loops drive them",
+        "Integrating multiple Python libraries to create cohesive apps",
+        "Designing user-friendly interfaces and managing background processes",
+      ],
+      bonusMedia: "/youtube-mp3-demo.mp4",
+      bonusNote:
+        "This project gave me a practical understanding of how GUI frameworks handle user events and async operations.",
+    },
+    {
+      title: "Mini Project – REST API Blogsite",
+      type: "Personal",
+      summary:
+        "Originally started as a job interview exercise, later expanded into a complete blogsite with authentication, CRUD features, and token-based security using Django REST Framework.",
+      media: "/machine-learning-platform-interface-with-model-met.jpg",
+      techStack: ["Python", "Django", "Django REST Framework", "MySQL", "Knox"],
+      learned: [
+        "Understanding RESTful architecture and CRUD design",
+        "Building and securing APIs with authentication tokens",
+        "Writing utility scripts for database setup and migrations",
+        "Applying modular design patterns for scalability and maintainability",
+      ],
+      bonusMedia: "/rest-blogsite-demo.mp4",
+      bonusNote:
+        "This was the project that really helped me ‘connect the dots’ between backend logic, APIs, and real-world web applications.",
     },
   ];
 
@@ -320,22 +351,22 @@ export default function Portfolio() {
 
   const certifications = [
     {
-      title: "AWS Certified Solutions Architect - Professional",
-      issuer: "Amazon Web Services",
-      date: "2023",
-      image: "/aws-certification-badge.jpg",
-    },
-    {
-      title: "Google Cloud Professional Data Engineer",
-      issuer: "Google Cloud",
+      title: "Scientific Computing with Python",
+      issuer: "FreeCodeCamp",
       date: "2022",
-      image: "/google-cloud-certification-badge.png",
+      image: "/FreeCodeCamp_Scientific_Python.png",
     },
     {
-      title: "Certified Kubernetes Administrator (CKA)",
-      issuer: "Cloud Native Computing Foundation",
-      date: "2023",
-      image: "/kubernetes-certification-badge.png",
+      title: "Data Analysis with Python",
+      issuer: "FreeCodeCamp",
+      date: "2022",
+      image: "/FreeCodeCamp_Data_Analysis.png",
+    },
+    {
+      title: "OutSystems Tradition Web Development(Associate)",
+      issuer: "OutSystems",
+      date: "2021",
+      image: "/OutSystems_Cert.pdf",
     },
   ];
 
@@ -364,6 +395,7 @@ export default function Portfolio() {
         )}
       </button>
 
+      {/* Move nav outside the main content */}
       <nav className="fixed left-8 top-1/2 -translate-y-1/2 z-50 hidden lg:block">
         <div className="flex flex-col gap-6">
           {navItems.map((item) => (
@@ -395,7 +427,7 @@ export default function Portfolio() {
 
       {/* Main Content */}
       <div className="min-h-screen bg-background">
-        <div className="lg:pl-32">
+        <div className="">
           <section
             id="hero"
             className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden"
@@ -409,7 +441,7 @@ export default function Portfolio() {
             <div className="text-center z-10 max-w-4xl mx-auto animate-fade-in">
               <div className="mb-8 inline-block">
                 <div className="w-32 h-32 rounded-full bg-gradient-to-br from-primary to-accent mx-auto mb-6 flex items-center justify-center text-primary-foreground text-4xl font-bold shadow-2xl shadow-accent/30 ring-4 ring-accent/20">
-                  JD
+                  JG
                 </div>
               </div>
               <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-transparent tracking-tight">
@@ -681,8 +713,9 @@ export default function Portfolio() {
                     >
                       <div className="flex justify-between items-start">
                         <div>
-                          <CardTitle className="text-2xl text-card-foreground mb-2">
-                            {project.title}
+                          <CardTitle className="flex items-center gap-2 text-2xl text-card-foreground mb-2">
+                            {project.title} -{" "}
+                            <span className="text-xs pt-2">{project.type}</span>
                           </CardTitle>
                           <CardDescription className="text-card-foreground text-base mt-2">
                             {project.summary}
@@ -702,7 +735,7 @@ export default function Portfolio() {
                           {/* Project Image */}
                           <div className="rounded-lg overflow-hidden shadow-lg border-2 border-accent/30 ring-4 ring-accent/10">
                             <img
-                              src={project.image || "/placeholder.svg"}
+                              src={project.media || "/placeholder.svg"}
                               alt={project.title}
                               className="w-full h-auto object-cover"
                             />
