@@ -2,16 +2,8 @@
   "version": 3,
   "pages404": true,
   "caseSensitive": false,
-  "basePath": "/jangueco",
+  "basePath": "",
   "redirects": [
-    {
-      "source": "/jangueco/",
-      "destination": "/jangueco",
-      "basePath": false,
-      "internal": true,
-      "statusCode": 308,
-      "regex": "^/jangueco/$"
-    },
     {
       "source": "/:path+/",
       "destination": "/:path+",

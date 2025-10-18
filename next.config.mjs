@@ -10,7 +10,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  basePath: '/jangueco'
 }
 
 export default nextConfig
