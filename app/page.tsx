@@ -36,14 +36,24 @@ export default function Portfolio() {
     null
   );
   const [expandedProject, setExpandedProject] = useState<number | null>(null);
-  const [activeSection, setActiveSection] = useState("hero");
+  const [activeSection, setActiveSection] = useState("intro");
   const [aboutExpanded, setAboutExpanded] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [expandedBonuses, setExpandedBonuses] = useState<
+    Record<number, number | null>
+  >({});
+
+  // helper: only treat certain image formats as "animated" for replay (webp, gif, apng)
+  const isAnimatedImage = (url?: string) => {
+    if (!url) return false;
+    return /\.(webp|gif|apng)(?:\?.*)?$/i.test(url);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
+      // Use the viewport midpoint to determine the active section (more robust for small sections).
       const sections = [
-        "hero",
+        "intro",
         "about",
         "experience",
         "projects",
@@ -52,20 +62,24 @@ export default function Portfolio() {
         "certifications",
         "contact",
       ];
-      const scrollPosition = window.scrollY + 200;
+      const midpoint = window.scrollY + window.innerHeight / 2;
 
       for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const { offsetTop, offsetHeight } = element;
-          if (
-            scrollPosition >= offsetTop &&
-            scrollPosition < offsetTop + offsetHeight
-          ) {
-            setActiveSection(section);
-            break;
-          }
+        const el = document.getElementById(section);
+        if (!el) continue;
+        const { offsetTop, offsetHeight } = el;
+        if (midpoint >= offsetTop && midpoint < offsetTop + offsetHeight) {
+          setActiveSection(section);
+          return;
         }
+      }
+
+      // Fallback: if scrolled to (or very near) the bottom, mark last section active
+      if (
+        window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - 50
+      ) {
+        setActiveSection("contact");
       }
     };
 
@@ -211,71 +225,77 @@ export default function Portfolio() {
       type: "Personal",
       summary:
         "A simple yet challenging game built with Python and Pygame where players control a shape to dodge oncoming obstacles. Later integrated NEAT for AI-driven autonomous gameplay.",
-      media: "/modern-analytics-dashboard.png",
+      media: "/shapes.webp",
       techStack: ["Python", "Pygame", "NEAT"],
       learned: [
         "Game loop design and responsive event handling",
         "Collision detection and animation logic",
         "Applied NEAT (NeuroEvolution of Augmenting Topologies) for AI-based learning and automation",
       ],
-      bonusMedia: "/shapes-demo.mp4",
-      bonusNote:
-        "This was my first real taste of combining game logic with machine learning. Watching the AI learn to play was surprisingly fun!",
+      bonuses: [
+        {
+          text: "Implemented NEAT to evolve an AI capable of playing the game autonomously",
+          media: "/Shapes-neat.webp",
+        },
+      ],
     },
     {
       title: "Double Pendulum Simulation",
       type: "Personal",
       summary:
         "A physics-based simulation of a double pendulum created using the Processing framework in Python. The setup includes a 'pen' attached to visualize the pendulum’s chaotic motion over time.",
-      media: "/data-pipeline-workflow-diagram-with-nodes-and-conn.jpg",
+      media: "/Double Pendulum.webp",
       techStack: ["Python", "Processing"],
       learned: [
         "How small changes in initial conditions cause drastically different results (chaos theory in action!)",
         "Mathematical modeling of motion and gravity",
         "Leveraging Processing for creating real-time physics visualizations",
       ],
-      bonusMedia: "/double-pendulum-drawing.mp4",
-      bonusNote:
-        "This project taught me how math and visuals can merge into something mesmerizing — even with a few typos causing ‘creative’ physics 😆",
+      bonuses: [
+        {
+          text: "Making a mistake in the equation",
+          media: "/Double Pendulum mistake.webp",
+        },
+        {
+          text: "Playing with the mistakes",
+          media: "/Double Pendulum mistake 2.webp",
+        },
+      ],
     },
     {
       title: "Pysort",
       type: "Personal",
       summary:
         "A simple automation script that organizes files in a directory into folders based on their file types — my first real taste of using Python to simplify daily tasks.",
-      media: "/machine-learning-platform-interface-with-model-met.jpg",
+      media: "/Pysort.webp",
       techStack: ["Python", "OS Module"],
       learned: [
         "File handling and directory management in Python",
         "How automation can simplify repetitive tasks",
         "Understanding the importance of clean, organized systems",
       ],
-      bonusMedia: "/pysort-script-demo.mp4",
-      bonusNote:
-        "One of those small scripts that made me realize — coding can literally make life easier.",
+      bonuses: [],
     },
     {
       title: "YouTube to MP3 Converter",
       type: "Personal",
       summary:
         "A desktop application that converts YouTube videos to MP3 using Pytube and PyQt6. The app features a simple graphical interface and handles downloads and file conversions seamlessly.",
-      media: "/machine-learning-platform-interface-with-model-met.jpg",
-      techStack: ["Python", "Pytube", "PyQt6"],
+      media: "/YouTubeToMp3.webp",
+      techStack: ["Python", "Pytube", "PyQt6", "ffmpeg"],
       learned: [
         "How GUI applications work and how event loops drive them",
         "Integrating multiple Python libraries to create cohesive apps",
         "Designing user-friendly interfaces and managing background processes",
       ],
-      bonusMedia: "/youtube-mp3-demo.mp4",
-      bonusNote:
-        "This project gave me a practical understanding of how GUI frameworks handle user events and async operations.",
+      bonuses: [],
     },
     {
       title: "Mini Project – REST API Blogsite",
       type: "Personal",
       summary:
         "Originally started as a job interview exercise, later expanded into a complete blogsite with authentication, CRUD features, and token-based security using Django REST Framework.",
-      media: "/machine-learning-platform-interface-with-model-met.jpg",
+      media: "/API endpoints.png",
       techStack: ["Python", "Django", "Django REST Framework", "MySQL", "Knox"],
       learned: [
         "Understanding RESTful architecture and CRUD design",
@@ -283,9 +303,12 @@ export default function Portfolio() {
         "Writing utility scripts for database setup and migrations",
         "Applying modular design patterns for scalability and maintainability",
       ],
-      bonusMedia: "/rest-blogsite-demo.mp4",
-      bonusNote:
-        "This was the project that really helped me ‘connect the dots’ between backend logic, APIs, and real-world web applications.",
+      bonuses: [
+        {
+          text: "The Entity Relationship Diagram of the API",
+          media: "/ERD.png",
+        },
+      ],
     },
   ];
 
@@ -371,7 +394,7 @@ export default function Portfolio() {
   ];
 
   const navItems = [
-    { id: "hero", label: "Home" },
+    { id: "intro", label: "Intro" },
     { id: "about", label: "About" },
     { id: "experience", label: "Experience" },
     { id: "projects", label: "Projects" },
@@ -429,7 +452,7 @@ export default function Portfolio() {
       <div className="min-h-screen bg-background">
         <div className="">
           <section
-            id="hero"
+            id="intro"
             className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden"
           >
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -440,9 +463,12 @@ export default function Portfolio() {
 
             <div className="text-center z-10 max-w-4xl mx-auto animate-fade-in">
               <div className="mb-8 inline-block">
-                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-primary to-accent mx-auto mb-6 flex items-center justify-center text-primary-foreground text-4xl font-bold shadow-2xl shadow-accent/30 ring-4 ring-accent/20">
-                  JG
-                </div>
+                <img
+                  src="/Profile Pic.jpeg"
+                  alt="Jan Michael Gueco"
+                  loading="lazy"
+                  className="w-40 h-40 md:w-48 md:h-48 rounded-full mx-auto mb-6 object-cover shadow-2xl shadow-accent/30 ring-4 ring-accent/20"
+                />
               </div>
               <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground via-primary to-accent bg-clip-text text-transparent tracking-tight">
                 Jan Michael Vincent Gueco
@@ -565,9 +591,19 @@ export default function Portfolio() {
           <section id="experience" className="py-24 px-4 relative">
             <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-secondary via-accent to-primary"></div>
             <div className="max-w-5xl mx-auto">
-              <h2 className="text-4xl font-bold mb-12 bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent text-center">
-                Experience
-              </h2>
+              <div className="flex flex-col items-center justify-center mb-12 gap-4 text-center">
+                <h2 className="text-4xl font-bold bg-gradient-to-r from-foreground to-primary bg-clip-text text-transparent">
+                  Experience
+                </h2>
+                <a
+                  href="/Gueco-resume5-pub.pdf"
+                  download
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent text-accent-foreground font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+                >
+                  Download latest resume
+                  <ExternalLink className="w-4 h-4" />
+                </a>
+              </div>
               <div className="space-y-6">
                 {experiences.map((exp, index) => (
                   <Card
@@ -732,13 +768,62 @@ export default function Portfolio() {
                     {expandedProject === index && (
                       <CardContent className="pt-0 animate-fade-in">
                         <div className="space-y-6">
-                          {/* Project Image */}
+                          {/* Project Image (supports image or video; videos loop) */}
                           <div className="rounded-lg overflow-hidden shadow-lg border-2 border-accent/30 ring-4 ring-accent/10">
-                            <img
-                              src={project.media || "/placeholder.svg"}
-                              alt={project.title}
-                              className="w-full h-auto object-cover"
-                            />
+                            {project.media ? (
+                              project.media.toLowerCase().endsWith(".mp4") ||
+                              project.media.toLowerCase().endsWith(".webm") ? (
+                                <video
+                                  src={project.media}
+                                  controls
+                                  loop
+                                  className="w-full h-auto object-cover"
+                                />
+                              ) : (
+                                <div className="relative">
+                                  <img
+                                    id={`project-img-${index}`}
+                                    src={
+                                      project.media +
+                                      (project.media.includes("?")
+                                        ? "&"
+                                        : "?") +
+                                      "r=0"
+                                    }
+                                    alt={project.title}
+                                    className="w-full h-auto object-cover"
+                                  />
+                                  {/* replay overlay only for animated image types */}
+                                  {isAnimatedImage(project.media) && (
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        const img = document.getElementById(
+                                          `project-img-${index}`
+                                        ) as HTMLImageElement | null;
+                                        if (img) {
+                                          img.src =
+                                            project.media +
+                                            (project.media.includes("?")
+                                              ? "&"
+                                              : "?") +
+                                            Date.now();
+                                        }
+                                      }}
+                                      className="absolute top-2 right-2 bg-accent/80 text-accent-foreground px-2 py-1 rounded"
+                                    >
+                                      Replay
+                                    </button>
+                                  )}
+                                </div>
+                              )
+                            ) : (
+                              <img
+                                src="/placeholder.svg"
+                                alt={project.title}
+                                className="w-full h-auto object-cover"
+                              />
+                            )}
                           </div>
 
                           <div className="bg-muted/50 rounded-lg p-6 border-l-4 border-accent">
@@ -775,6 +860,117 @@ export default function Portfolio() {
                               ))}
                             </ul>
                           </div>
+
+                          {/* Bonuses - collapsible list; media rendered same size as main media */}
+                          {project.bonuses && project.bonuses.length > 0 && (
+                            <div className="bg-muted/50 rounded-lg p-6 border-l-4 border-accent">
+                              <h4 className="font-semibold text-card-foreground mb-4 flex items-center gap-2">
+                                <BookOpen className="w-5 h-5 text-accent" />
+                                Bonuses
+                              </h4>
+                              <ul className="space-y-4">
+                                {project.bonuses.map((bonus, bi) => {
+                                  const isOpen = expandedBonuses[index] === bi;
+                                  const imgId = `bonus-img-${index}-${bi}`;
+                                  return (
+                                    <li
+                                      key={bi}
+                                      className="border border-border rounded-lg overflow-hidden"
+                                    >
+                                      <button
+                                        className="w-full flex items-center justify-between p-4 bg-card hover:bg-accent/5 transition"
+                                        onClick={() =>
+                                          setExpandedBonuses((prev) => ({
+                                            ...prev,
+                                            [index]:
+                                              prev[index] === bi ? null : bi,
+                                          }))
+                                        }
+                                      >
+                                        <span className="text-card-foreground font-medium">
+                                          {bonus.text || "[Bonus title]"}
+                                        </span>
+                                        <ChevronDown
+                                          className={`w-5 h-5 text-accent transform transition-transform ${
+                                            isOpen ? "rotate-180" : ""
+                                          }`}
+                                        />
+                                      </button>
+
+                                      {isOpen && (
+                                        <div className="p-4">
+                                          {/* media container - same styling as main media */}
+                                          <div className="rounded-lg overflow-hidden shadow-lg border-2 border-accent/30 ring-4 ring-accent/10">
+                                            {bonus.media ? (
+                                              bonus.media
+                                                .toLowerCase()
+                                                .endsWith(".mp4") ||
+                                              bonus.media
+                                                .toLowerCase()
+                                                .endsWith(".webm") ? (
+                                                <video
+                                                  src={bonus.media}
+                                                  controls
+                                                  loop
+                                                  className="w-full h-auto object-cover"
+                                                />
+                                              ) : (
+                                                <div className="relative">
+                                                  <img
+                                                    id={imgId}
+                                                    src={
+                                                      // add tiny cache buster so replay will reload when requested
+                                                      bonus.media +
+                                                      (bonus.media.includes("?")
+                                                        ? "&"
+                                                        : "?") +
+                                                      "r=0"
+                                                    }
+                                                    alt={
+                                                      bonus.text ||
+                                                      `Bonus ${bi + 1}`
+                                                    }
+                                                    className="w-full h-auto object-cover"
+                                                  />
+                                                  {/* replay overlay only for animated image types */}
+                                                  {isAnimatedImage(
+                                                    bonus.media
+                                                  ) && (
+                                                    <button
+                                                      onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        const img =
+                                                          document.getElementById(
+                                                            imgId
+                                                          ) as HTMLImageElement | null;
+                                                        if (img) {
+                                                          img.src =
+                                                            bonus.media +
+                                                            (bonus.media.includes(
+                                                              "?"
+                                                            )
+                                                              ? "&"
+                                                              : "?") +
+                                                            Date.now();
+                                                        }
+                                                      }}
+                                                      className="absolute top-2 right-2 bg-accent/80 text-accent-foreground px-2 py-1 rounded"
+                                                    >
+                                                      Replay
+                                                    </button>
+                                                  )}
+                                                </div>
+                                              )
+                                            ) : null}
+                                          </div>
+                                        </div>
+                                      )}
+                                    </li>
+                                  );
+                                })}
+                              </ul>
+                            </div>
+                          )}
                         </div>
                       </CardContent>
                     )}
@@ -958,7 +1154,9 @@ export default function Portfolio() {
                     Religious
                   </p>
                   <p className="text-card-foreground italic leading-relaxed text-sm">
-                    "Do unto others as you would have them do unto you."
+                    “Do not fear, for I am with you; do not be dismayed, for I
+                    am your God. I will strengthen you and help you; I will
+                    uphold you with my righteous right hand.” — Isaiah 41:10
                   </p>
                 </div>
 
@@ -967,7 +1165,9 @@ export default function Portfolio() {
                     Professional
                   </p>
                   <p className="text-card-foreground italic leading-relaxed text-sm">
-                    "Code is like humor. When you have to explain it, it's bad."
+                    “When everything seems to be going against you, remember
+                    that the airplane takes off against the wind, not with it.”
+                    — Henry Ford
                   </p>
                 </div>
 
@@ -976,7 +1176,7 @@ export default function Portfolio() {
                     Personal
                   </p>
                   <p className="text-card-foreground italic leading-relaxed text-sm">
-                    "The only way to do great work is to love what you do."
+                    “Don’t aim to be the best in the world. Aim to be the best for the world.” — Unknown
                   </p>
                 </div>
               </div>
