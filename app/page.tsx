@@ -42,6 +42,8 @@ export default function Portfolio() {
   const [expandedBonuses, setExpandedBonuses] = useState<
     Record<number, number | null>
   >({});
+  // track media load state by key (project-<i> / bonus-<i>-<bi>)
+  const [mediaLoaded, setMediaLoaded] = useState<Record<string, boolean>>({});
 
   // helper: only treat certain image formats as "animated" for replay (webp, gif, apng)
   const isAnimatedImage = (url?: string) => {
@@ -225,7 +227,7 @@ export default function Portfolio() {
       type: "Personal",
       summary:
         "A simple yet challenging game built with Python and Pygame where players control a shape to dodge oncoming obstacles. Later integrated NEAT for AI-driven autonomous gameplay.",
-      media: "/shapes.webp",
+      media: "/Shapes.webp",
       techStack: ["Python", "Pygame", "NEAT"],
       learned: [
         "Game loop design and responsive event handling",
@@ -235,7 +237,7 @@ export default function Portfolio() {
       bonuses: [
         {
           text: "Implemented NEAT to evolve an AI capable of playing the game autonomously",
-          media: "/Shapes-neat.webp",
+          media: "/Shapes-Neat.webp",
         },
       ],
     },
@@ -403,6 +405,11 @@ export default function Portfolio() {
     { id: "certifications", label: "Certifications" },
     { id: "contact", label: "Contact" },
   ];
+
+  const markLoaded = (key: string) =>
+    setMediaLoaded((prev) => ({ ...prev, [key]: true }));
+  const markNotLoaded = (key: string) =>
+    setMediaLoaded((prev) => ({ ...prev, [key]: false }));
 
   return (
     <>
@@ -771,33 +778,57 @@ export default function Portfolio() {
                           {/* Project Image (supports image or video; videos loop) */}
                           <div className="rounded-lg overflow-hidden shadow-lg border-2 border-accent/30 ring-4 ring-accent/10">
                             {project.media ? (
-                              project.media.toLowerCase().endsWith(".mp4") ||
+                              project.media
+                                .toLowerCase()
+                                .endsWith(".mp4") ||
                               project.media.toLowerCase().endsWith(".webm") ? (
-                                <video
-                                  src={project.media}
-                                  controls
-                                  loop
-                                  className="w-full h-auto object-cover"
-                                />
+                                <div className="relative">
+                                  {/* media loading overlay */}
+                                  {!mediaLoaded[`project-${index}`] && (
+                                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-card/60">
+                                      <div className="w-10 h-10 border-4 border-t-accent border-accent-200 rounded-full animate-spin" />
+                                      <span className="text-sm text-card-foreground mt-3">
+                                        Loading media...
+                                      </span>
+                                    </div>
+                                  )}
+                                  <video
+                                    src={project.media}
+                                    controls
+                                    loop
+                                    onLoadedData={() =>
+                                      markLoaded(`project-${index}`)
+                                    }
+                                    className="w-full h-auto object-cover"
+                                  />
+                                </div>
                               ) : (
                                 <div className="relative">
+                                  {!mediaLoaded[`project-${index}`] && (
+                                    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-card/60">
+                                      <div className="w-10 h-10 border-4 border-t-accent border-accent-200 rounded-full animate-spin" />
+                                      <span className="text-sm text-card-foreground mt-3">
+                                        Loading image...
+                                      </span>
+                                    </div>
+                                  )}
                                   <img
                                     id={`project-img-${index}`}
                                     src={
                                       project.media +
-                                      (project.media.includes("?")
-                                        ? "&"
-                                        : "?") +
+                                      (project.media.includes("?") ? "&" : "?") +
                                       "r=0"
                                     }
                                     alt={project.title}
                                     className="w-full h-auto object-cover"
+                                    onLoad={() => markLoaded(`project-${index}`)}
                                   />
                                   {/* replay overlay only for animated image types */}
                                   {isAnimatedImage(project.media) && (
                                     <button
                                       onClick={(e) => {
                                         e.stopPropagation();
+                                        markNotLoaded(`project-${index}`);
                                         const img = document.getElementById(
                                           `project-img-${index}`
                                         ) as HTMLImageElement | null;
@@ -810,7 +841,7 @@ export default function Portfolio() {
                                             Date.now();
                                         }
                                       }}
-                                      className="absolute top-2 right-2 bg-accent/80 text-accent-foreground px-2 py-1 rounded"
+                                      className="absolute top-2 right-2 bg-accent/80 text-accent-foreground px-2 py-1 rounded z-30"
                                     >
                                       Replay
                                     </button>
@@ -901,68 +932,107 @@ export default function Portfolio() {
                                         <div className="p-4">
                                           {/* media container - same styling as main media */}
                                           <div className="rounded-lg overflow-hidden shadow-lg border-2 border-accent/30 ring-4 ring-accent/10">
-                                            {bonus.media ? (
-                                              bonus.media
-                                                .toLowerCase()
-                                                .endsWith(".mp4") ||
-                                              bonus.media
-                                                .toLowerCase()
-                                                .endsWith(".webm") ? (
-                                                <video
-                                                  src={bonus.media}
-                                                  controls
-                                                  loop
-                                                  className="w-full h-auto object-cover"
-                                                />
-                                              ) : (
-                                                <div className="relative">
-                                                  <img
-                                                    id={imgId}
-                                                    src={
-                                                      // add tiny cache buster so replay will reload when requested
-                                                      bonus.media +
-                                                      (bonus.media.includes("?")
-                                                        ? "&"
-                                                        : "?") +
-                                                      "r=0"
-                                                    }
-                                                    alt={
-                                                      bonus.text ||
-                                                      `Bonus ${bi + 1}`
-                                                    }
-                                                    className="w-full h-auto object-cover"
-                                                  />
-                                                  {/* replay overlay only for animated image types */}
-                                                  {isAnimatedImage(
-                                                    bonus.media
-                                                  ) && (
-                                                    <button
-                                                      onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        const img =
-                                                          document.getElementById(
-                                                            imgId
-                                                          ) as HTMLImageElement | null;
-                                                        if (img) {
-                                                          img.src =
-                                                            bonus.media +
-                                                            (bonus.media.includes(
-                                                              "?"
-                                                            )
-                                                              ? "&"
-                                                              : "?") +
-                                                            Date.now();
-                                                        }
-                                                      }}
-                                                      className="absolute top-2 right-2 bg-accent/80 text-accent-foreground px-2 py-1 rounded"
-                                                    >
-                                                      Replay
-                                                    </button>
-                                                  )}
-                                                </div>
-                                              )
-                                            ) : null}
-                                          </div>
+                                                    {bonus.media ? (
+                                                      bonus.media
+                                                        .toLowerCase()
+                                                        .endsWith(".mp4") ||
+                                                      bonus.media
+                                                        .toLowerCase()
+                                                        .endsWith(
+                                                          ".webm"
+                                                        ) ? (
+                                                        <div className="relative">
+                                                          {!mediaLoaded[
+                                                            `bonus-${index}-${bi}`
+                                                          ] && (
+                                                            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-card/60">
+                                                              <div className="w-10 h-10 border-4 border-t-accent border-accent-200 rounded-full animate-spin" />
+                                                              <span className="text-sm text-card-foreground mt-3">
+                                                                Loading video...
+                                                              </span>
+                                                            </div>
+                                                          )}
+                                                          <video
+                                                            src={bonus.media}
+                                                            controls
+                                                            loop
+                                                            onLoadedData={() =>
+                                                              markLoaded(
+                                                                `bonus-${index}-${bi}`
+                                                              )
+                                                            }
+                                                            className="w-full h-auto object-cover"
+                                                          />
+                                                        </div>
+                                                      ) : (
+                                                        <div className="relative">
+                                                          {!mediaLoaded[
+                                                            `bonus-${index}-${bi}`
+                                                          ] && (
+                                                            <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-card/60">
+                                                              <div className="w-10 h-10 border-4 border-t-accent border-accent-200 rounded-full animate-spin" />
+                                                              <span className="text-sm text-card-foreground mt-3">
+                                                                Loading image...
+                                                              </span>
+                                                            </div>
+                                                          )}
+                                                          <img
+                                                            id={imgId}
+                                                            src={
+                                                              // add tiny cache buster so replay will reload when requested
+                                                              bonus.media +
+                                                              (bonus.media.includes(
+                                                                "?"
+                                                              )
+                                                                ? "&"
+                                                                : "?") +
+                                                              "r=0"
+                                                            }
+                                                            alt={
+                                                              bonus.text ||
+                                                              `Bonus ${bi + 1}`
+                                                            }
+                                                            className="w-full h-auto object-cover"
+                                                            onLoad={() =>
+                                                              markLoaded(
+                                                                `bonus-${index}-${bi}`
+                                                              )
+                                                            }
+                                                          />
+                                                          {/* replay overlay only for animated image types */}
+                                                          {isAnimatedImage(
+                                                            bonus.media
+                                                          ) && (
+                                                            <button
+                                                              onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                markNotLoaded(
+                                                                  `bonus-${index}-${bi}`
+                                                                );
+                                                                const img =
+                                                                  document.getElementById(
+                                                                    imgId
+                                                                  ) as HTMLImageElement | null;
+                                                                if (img) {
+                                                                  img.src =
+                                                                    bonus.media +
+                                                                    (bonus.media.includes(
+                                                                      "?"
+                                                                    )
+                                                                      ? "&"
+                                                                      : "?") +
+                                                                    Date.now();
+                                                                }
+                                                              }}
+                                                              className="absolute top-2 right-2 bg-accent/80 text-accent-foreground px-2 py-1 rounded"
+                                                            >
+                                                              Replay
+                                                            </button>
+                                                          )}
+                                                        </div>
+                                                      )
+                                                    ) : null}
+                                                  </div>
                                         </div>
                                       )}
                                     </li>
