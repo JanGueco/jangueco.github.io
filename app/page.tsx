@@ -29,7 +29,187 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+
+type PortfolioExperience = {
+  title: string;
+  company: string;
+  period: string;
+  description: string;
+  techStack?: string[];
+  dayToDay: string[];
+  learned: string[];
+  projectSummaries?: string[];
+};
+
+function ExperienceMotionCard({
+  exp,
+  index,
+  expandedExperience,
+  setExpandedExperience,
+  variant = "default",
+}: {
+  exp: PortfolioExperience;
+  index: number;
+  expandedExperience: number | null;
+  setExpandedExperience: (v: number | null) => void;
+  variant?: "default" | "cambridgeCurrent" | "cambridgeJuniorUnder";
+}) {
+  const isOpen = expandedExperience === index;
+  const branchWrap =
+    variant === "cambridgeJuniorUnder"
+      ? "ml-1 border-l-2 border-accent/40 pl-4 md:ml-2 md:pl-5 bg-muted/10 rounded-l-lg"
+      : "";
+
+  return (
+    <motion.div
+      layout
+      transition={{
+        layout: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
+      }}
+      className={"relative " + branchWrap}
+    >
+      <Card className="bg-card border-2 border-border shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-accent/10 overflow-hidden hover:border-accent/50 relative group">
+        <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-accent to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <CardHeader
+          className="cursor-pointer hover:bg-accent/5 transition-colors duration-200"
+          onClick={() =>
+            setExpandedExperience(isOpen ? null : index)
+          }
+        >
+          {variant === "cambridgeCurrent" && (
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-accent mb-2">
+              Current role
+            </p>
+          )}
+          {variant === "cambridgeJuniorUnder" && (
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+              Prior role, same organization
+            </p>
+          )}
+          <div className="flex justify-between items-start">
+            <div>
+              <CardTitle className="text-2xl text-card-foreground mb-2">
+                {exp.title}
+              </CardTitle>
+              <CardDescription className="text-muted-foreground text-base">
+                {exp.company} • {exp.period}
+              </CardDescription>
+            </div>
+            <ChevronDown
+              className={`w-6 h-6 text-accent transition-transform duration-300 flex-shrink-0 ${
+                isOpen ? "rotate-180" : ""
+              }`}
+            />
+          </div>
+          <p className="text-card-foreground mt-4">{exp.description}</p>
+        </CardHeader>
+
+        <AnimatePresence initial={false}>
+          {isOpen && (
+            <motion.div
+              key={`experience-expand-${index}`}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{
+                height: {
+                  duration: 0.42,
+                  ease: [0.33, 1, 0.68, 1],
+                },
+                opacity: {
+                  duration: 0.28,
+                  ease: "easeOut",
+                },
+              }}
+              style={{ overflow: "hidden" }}
+            >
+              <CardContent className="pt-0 pb-6 border-0 shadow-none">
+                <div className="space-y-6">
+                  {exp.techStack && (
+                    <div className="bg-muted/50 rounded-lg p-6 border-l-4 border-accent">
+                      <h4 className="font-semibold text-card-foreground mb-3 flex items-center gap-2">
+                        <Code2 className="w-5 h-5 text-accent" />
+                        Tech Stack
+                      </h4>
+
+                      <div className="flex flex-wrap gap-2">
+                        {exp.techStack.map((tech, i) => (
+                          <span
+                            key={i}
+                            className="px-3 py-1 bg-accent text-accent-foreground rounded-full text-sm font-medium shadow-sm"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="bg-muted/50 rounded-lg p-6 border-l-4 border-primary">
+                    <h4 className="font-semibold text-card-foreground mb-3 flex items-center gap-2">
+                      <Terminal className="w-5 h-5 text-primary" />
+                      Day-to-Day Responsibilities
+                    </h4>
+                    <ul className="space-y-2">
+                      {exp.dayToDay.map((task, i) => (
+                        <li
+                          key={i}
+                          className="flex items-start gap-2 text-card-foreground"
+                        >
+                          <span className="text-accent mt-1">•</span>
+                          <span>{task}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="bg-muted/50 rounded-lg p-6 border-l-4 border-secondary">
+                    <h4 className="font-semibold text-card-foreground mb-3 flex items-center gap-2">
+                      <Lightbulb className="w-5 h-5 text-secondary" />
+                      What I&apos;ve Learned
+                    </h4>
+                    <ul className="space-y-2">
+                      {exp.learned.map((item, i) => (
+                        <li
+                          key={i}
+                          className="flex items-start gap-2 text-card-foreground"
+                        >
+                          <span className="text-accent mt-1">•</span>
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {exp.projectSummaries && (
+                    <div className="bg-muted/50 rounded-lg p-6 border-l-4 border-accent">
+                      <h4 className="font-semibold text-card-foreground mb-3 flex items-center gap-2">
+                        <Briefcase className="w-5 h-5 text-accent" />
+                        Project Summaries
+                      </h4>
+                      <ul className="space-y-2">
+                        {exp.projectSummaries.map((project, i) => (
+                          <li
+                            key={i}
+                            className="flex items-start gap-2 text-card-foreground"
+                          >
+                            <span className="text-accent mt-1">•</span>
+                            <span>{project}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </Card>
+    </motion.div>
+  );
+}
 
 export default function Portfolio() {
   const [expandedExperience, setExpandedExperience] = useState<number | null>(
@@ -99,11 +279,61 @@ export default function Portfolio() {
 
   const experiences = [
     {
+      title: "Data Engineer",
+      company: "Cambridge University Press & Assessment",
+      period: "2025 - Present",
+      description:
+        "Promoted from Junior Data Engineer in 2025. I deepen Digital Sustainability delivery with PySpark validation, SQL-first pipeline optimization, and AI-assisted discovery, including a proof-of-concept RAG system and executive-facing carbon reporting.",
+
+      techStack: [
+        "Python",
+        "PySpark",
+        "Pandas",
+        "Matplotlib",
+        "SQL",
+        "PostgreSQL",
+        "MySQL",
+        "Hue",
+        "Impala",
+        "Lighthouse",
+        "React",
+        "Amazon Web Services (AWS)",
+        "Google Cloud Platform (GCP)",
+        "N8N",
+        "REST APIs",
+      ],
+
+      dayToDay: [
+        "Own Digital Sustainability delivery in an Agile and Scrum environment after promotion to Data Engineer",
+        "Spearheaded R&D for a Quick Carbon Calculator using Python for automated API ingestion and Matplotlib visualizations for executive reporting",
+        "Engineered data quality gates with PySpark, including automated validation checks for alignment and integrity between raw and transformed datasets",
+        "Optimized the Digital Sustainability pipeline by simplifying legacy processes and SQL transformations to improve carbon assessment speed and accuracy",
+        "Delivered a proof-of-concept RAG system that ingested Confluence documentation into an AI knowledge base using Python, n8n workflow orchestration, and a React front end",
+        "Authored technical methodologies and documentation for scripts and assessment findings to support scalability and team alignment",
+        "Generated carbon assessment reports for platform owners and stakeholders; reviewed code and mentored peers",
+        "Collaborated across regions and traveled to the UK for presentations, workshops, and conferences",
+      ],
+
+      learned: [
+        "Stepping into broader ownership after promotion, from design through stakeholder communication",
+        "Combining PySpark, SQL, and Python for trustworthy validation at scale",
+        "Shipping RAG and LLM-adjacent workflows that fit enterprise knowledge and security expectations",
+        "Writing methodologies and documentation that stay useful as teams and platforms grow",
+        "Balancing deep technical work with mentoring and code review",
+      ],
+
+      projectSummaries: [
+        "Quick Carbon Calculator R&D with automated API pipelines and Matplotlib reporting for executives.",
+        "RAG proof of concept for Confluence-backed knowledge discovery with React and n8n.",
+        "Pipeline and SQL modernization work that improved carbon assessment speed and accuracy.",
+      ],
+    },
+    {
       title: "Junior Data Engineer",
       company: "Cambridge University Press & Assessment",
-      period: "2023 - Present",
+      period: "2023 - 2025",
       description:
-        "Supporting the Digital Sustainability team through data engineering and analytics. Focused on automating data pipelines, optimizing ETL processes, and building scalable data solutions to drive digital carbon assessments. Also explored AI and LLM applications to enhance data workflows and insights.",
+        "Supported the Digital Sustainability team through data engineering and analytics: automating pipelines, optimizing ETL, and building scalable solutions for digital carbon assessments, plus early AI and LLM experiments to improve data workflows.",
 
       techStack: [
         "Python",
@@ -122,43 +352,84 @@ export default function Portfolio() {
       ],
 
       dayToDay: [
-        "Participated in weekly stand-ups and sprint planning meetings within an Agile/Scrum setup",
-        "Automated data extraction, transformation, and loading (ETL) processes using Python and later transitioned them into SQL-based workflows for better scalability",
-        "Optimized existing data workflows to improve performance, reliability, and reduce manual intervention",
-        "Researched methodologies and tools to calculate digital carbon emissions from online and cloud activities",
-        "Created documentation, starter packs, and guides to support team onboarding and internal knowledge sharing",
+        "Participated in weekly stand-ups and sprint planning in an Agile and Scrum setup",
+        "Automated ETL processes in Python and transitioned workloads into SQL-based workflows for scalability",
+        "Optimized data workflows to improve performance, reliability, and reduce manual intervention",
+        "Researched methodologies and tools for digital carbon emissions from online and cloud activity",
+        "Created documentation, starter packs, and guides for onboarding and internal knowledge sharing",
         "Generated and presented carbon assessment reports to platform owners and stakeholders",
-        "Prototyped AI/LLM tools using both high-code and low-code environments to enhance data and architecture discovery processes",
-        "Reviewed code, mentored peers, and contributed to improving overall team technical standards",
-        "Collaborated cross-functionally with teams across regions and traveled to the UK for project presentations, workshops, and conferences",
+        "Prototyped AI and LLM tools in high-code and low-code environments to improve data and architecture discovery",
+        "Reviewed code, mentored peers, and helped raise team technical standards",
+        "Collaborated cross-functionally across regions and traveled to the UK for project presentations, workshops, and conferences",
       ],
 
       learned: [
         "Collaborating with diverse teams and cultures within a global organization",
         "Working with large datasets and optimizing data workflows for scale and performance",
         "Troubleshooting complex data issues and applying analytical problem-solving skills",
-        "Using AI and LLM tools to streamline data engineering and software development tasks",
+        "Using AI and LLM tools to streamline data engineering and discovery",
         "Gaining a deeper understanding of digital sustainability and carbon footprint assessment methodologies",
         "Writing professional reports and presenting findings to both technical and non-technical audiences",
         "Gathering requirements and insights through effective communication and stakeholder engagement",
       ],
 
       projectSummaries: [
-        "Developed Python scripts to automate AWS usage data categorization and carbon calculation, reducing processing time from days to minutes while minimizing human error.",
-        "Automated Google Analytics data extraction, categorization, and calculations using Python, significantly reducing manual effort and improving accuracy.",
-        "Developed automated webpage assessment tools using Lighthouse, Playwright, and Chrome DevTools to measure and analyze the carbon impact of various digital platforms.",
-        "Led yearly carbon assessments for multiple digital platforms, covering data collection, cleaning, analysis, report generation and report presentation to stakeholders.",
-        "Built the internal Digital Emissions Calculator (DEC Tool) — a simplified representation of the entire digital product carbon assessment process.",
-        "Migrated Python-based AWS scripts into SQL workflows for execution in the cloud data warehouse, improving performance and reliability.",
-        "Collaborated on AI-driven workflows using LLM agents integrated with N8N, assisting data and solution architects with discovery and research tasks.",
+        "Python automation for AWS usage categorization and carbon calculation, cutting processing from days to minutes.",
+        "Automated Google Analytics extraction, categorization, and calculations in Python to reduce manual effort and errors.",
+        "Automated webpage assessment tooling with Lighthouse, Playwright, and Chrome DevTools for platform carbon impact analysis.",
+        "Led yearly carbon assessments across data collection, cleaning, analysis, reporting, and stakeholder presentation.",
+        "Built the internal Digital Emissions Calculator (DEC Tool) as a simplified view of the full digital product carbon assessment process.",
+        "Migrated Python-based AWS scripts into SQL warehouse workflows for performance and reliability.",
+        "Collaborated on AI-driven workflows using LLM agents integrated with N8N for architect discovery and research.",
       ],
     },
     {
-      title: "Junior Software Developer",
+      title: "Full Stack Developer (Contractual - Independent)",
+      company: "Enterprise Management Solutions",
+      period: "2025 - 2026",
+      description:
+        "Independent contract building high-conversion marketing sites and full deployment pipelines for clients, with Laravel and PHP on the stack plus DNS, CDN, and Nginx on AWS from design to go-live.",
+
+      techStack: [
+        "Laravel",
+        "PHP",
+        "Blade",
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "MySQL",
+        "Nginx",
+        "Amazon Web Services (AWS)",
+        "Amazon EC2",
+        "Cloudflare",
+        "GoDaddy (DNS)",
+        "GoHighLevel (GHL)",
+        "REST APIs",
+      ],
+
+      dayToDay: [
+        "Engineered high-conversion marketing websites with Laravel, PHP, and Blade, using custom HTML, CSS, and JavaScript aligned to client branding",
+        "Architected end-to-end deployment: DNS via GoDaddy and Cloudflare, TLS, and Nginx-served apps on AWS EC2",
+        "Integrated GoHighLevel (GHL) CRM for lead capture and built third-party workflows including food ordering and financial services connections",
+      ],
+
+      learned: [
+        "Turning client brand requirements into polished, maintainable Laravel and Blade front ends",
+        "Owning DNS/CDN and reverse-proxy configuration for production hosting on cloud VMs",
+        "Shipping CRM-backed funnels and complex external API integrations under contract timelines",
+      ],
+
+      projectSummaries: [
+        "Delivered full-stack Laravel marketing properties with bespoke UI/UX and production-ready deployment on Nginx within EC2.",
+        "Connected GHL CRM and other APIs to unlock lead capture and industry-specific operational workflows.",
+      ],
+    },
+    {
+      title: "Junior Software Developer / OutSystems Developer",
       company: "Direct Sourcing Solutions",
       period: "2021 - 2023",
       description:
-        "Developed enterprise and client-facing applications using OutSystems, a rapid low-code development platform. Collaborated with cross-functional teams to deliver scalable solutions for clients such as Coca-Cola and MPTC (Metro Pacific Tollways Corporation).",
+        "Developed and implemented enterprise-grade OutSystems applications for Coca-Cola and MPTC, handling deployments from development through production and authoring user-facing documentation.",
 
       techStack: [
         "OutSystems",
@@ -172,13 +443,11 @@ export default function Portfolio() {
       ],
 
       dayToDay: [
-        "Participated in daily scrums and sprint planning meetings within an Agile/Scrum environment",
-        "Implemented new features and resolved bugs across multiple projects using OutSystems",
-        "Collaborated with team members to identify, troubleshoot, and resolve technical issues efficiently",
-        "Participated in code reviews and contributed to improving overall code quality and maintainability",
-        "Wrote and maintained technical documentation for developed features, modules, and workflows",
-        "Provided production support by diagnosing and resolving issues in development, staging, and production environments",
-        "Handled production deployments and conducted post-deployment verifications to ensure system stability",
+        "Built and enhanced enterprise-grade web applications for Coca-Cola and MPTC on the OutSystems platform to meet large-scale client requirements",
+        "Ran end-to-end deployment workflows from development to production with troubleshooting and production support",
+        "Collaborated in Agile teams (daily scrums, sprint commitments) and authored user manuals to streamline handovers and improve the end-user experience",
+        "Implemented features, resolved bugs across multiple projects, and participated in code reviews",
+        "Maintained technical documentation for modules and workflows; verified production releases post-deployment",
       ],
 
       learned: [
@@ -195,7 +464,7 @@ export default function Portfolio() {
         "Contributed to MPTC’s mobile app, MPT DriveHub, used by millions of drivers for toll payments, balance management, and account monitoring. Responsibilities included implementing new features, fixing production bugs, and enhancing user experience.",
         "Collaborated on Coca-Cola’s Distribution Management System (DMS), improving logistics operations by adding new modules, fixing bugs, and optimizing performance for high-volume data handling.",
         "Assisted in Coca-Cola’s Learning Management System (LMS) project, performing QA testing, unit tests, and writing comprehensive user manuals for training and onboarding materials.",
-        "Developed Coca-Cola’s Worker Safety and Compliance Application from the ground up — both web and mobile versions — ensuring compliance tracking, safety audits, and reporting features were delivered seamlessly.",
+        "Developed Coca-Cola’s Worker Safety and Compliance Application from the ground up for both web and mobile, ensuring compliance tracking, safety audits, and reporting features were delivered seamlessly.",
       ],
     },
     {
@@ -222,6 +491,30 @@ export default function Portfolio() {
   ];
 
   const projects = [
+    {
+      title: "GreenConvert",
+      type: "Personal",
+      summary:
+        "A full-stack image and video converter to WebP and WebM with a dark eco-themed UI and estimates of energy and CO₂ savings from smaller file sizes. FastAPI backend (Pillow, ffmpeg) and a React (Vite) plus Tailwind frontend.",
+      media: "/green-image-converter-placeholder.svg",
+      repoUrl: "https://github.com/JanGueco/green-image-converter",
+      techStack: [
+        "React",
+        "Vite",
+        "Tailwind CSS",
+        "Python",
+        "FastAPI",
+        "Pillow",
+        "ffmpeg",
+      ],
+      learned: [
+        "Designing async conversion jobs with status polling and downloadable results",
+        "Handling large multipart uploads and binary responses between SPA and API",
+        "Connecting media processing in Python to a modern React workflow",
+        "Framing sustainability metrics so users see impact from format choices",
+      ],
+      bonuses: [],
+    },
     {
       title: "Shapes",
       type: "Personal",
@@ -268,7 +561,7 @@ export default function Portfolio() {
       title: "Pysort",
       type: "Personal",
       summary:
-        "A simple automation script that organizes files in a directory into folders based on their file types — my first real taste of using Python to simplify daily tasks.",
+        "A simple automation script that organizes files in a directory into folders based on their file types. It was my first real taste of using Python to simplify daily tasks.",
       media: "/Pysort.webp",
       techStack: ["Python", "OS Module"],
       learned: [
@@ -293,7 +586,7 @@ export default function Portfolio() {
       bonuses: [],
     },
     {
-      title: "Mini Project – REST API Blogsite",
+      title: "Mini Project - REST API Blogsite",
       type: "Personal",
       summary:
         "Originally started as a job interview exercise, later expanded into a complete blogsite with authentication, CRUD features, and token-based security using Django REST Framework.",
@@ -352,7 +645,7 @@ export default function Portfolio() {
       name: "SQL",
       icon: <Database className="w-8 h-8" />,
       experience:
-        "Applied in both Software Development and Data Engineering roles — designing schemas, optimizing queries, and managing relational databases for production workloads.",
+        "Applied in both Software Development and Data Engineering roles: designing schemas, optimizing queries, and managing relational databases for production workloads.",
     },
     {
       name: "HTML & CSS",
@@ -364,7 +657,7 @@ export default function Portfolio() {
       name: "Amazon Web Services (AWS) & Google Cloud Platform (GCP)",
       icon: <Cloud className="w-8 h-8" />,
       experience:
-        "Experience using cloud services for data storage, processing, and analytics — including workflow automation and resource management.",
+        "Experience using cloud services for data storage, processing, and analytics, including workflow automation and resource management.",
     },
     {
       name: "Nginx",
@@ -411,6 +704,12 @@ export default function Portfolio() {
   const markNotLoaded = (key: string) =>
     setMediaLoaded((prev) => ({ ...prev, [key]: false }));
 
+  const cambridgeCareerPair =
+    experiences.length >= 2 &&
+    experiences[0].company === experiences[1].company &&
+    experiences[0].title === "Data Engineer" &&
+    experiences[1].title === "Junior Data Engineer";
+
   return (
     <>
       <button
@@ -435,17 +734,17 @@ export default function Portfolio() {
               className="group flex items-center gap-3"
             >
               <div
-                className={`h-3 w-3 rounded-full border-2 transition-all duration-300 ${
+                className={`h-3 w-3 shrink-0 rounded-full border-2 transition-all duration-300 ${
                   activeSection === item.id
-                    ? "bg-accent border-accent scale-125 shadow-lg shadow-accent/50"
-                    : "border-muted-foreground hover:border-accent hover:scale-110"
+                    ? "scale-125 border-accent bg-accent opacity-100 shadow-lg shadow-accent/50"
+                    : "border-muted-foreground opacity-70 hover:scale-110 hover:border-accent hover:opacity-100"
                 }`}
               />
               <span
-                className={`text-sm font-medium transition-all duration-300 opacity-0 group-hover:opacity-100 ${
+                className={`text-sm font-medium transition-all duration-300 ${
                   activeSection === item.id
-                    ? "opacity-100 text-accent"
-                    : "text-muted-foreground"
+                    ? "font-semibold text-accent"
+                    : "text-muted-foreground group-hover:text-foreground"
                 }`}
               >
                 {item.label}
@@ -481,12 +780,13 @@ export default function Portfolio() {
                 Jan Michael Vincent Gueco
               </h1>
               <p className="text-xl md:text-2xl text-primary mb-8 font-semibold">
-                Software Developer & Data Engineer
+                Data Engineer & Software Developer
               </p>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed">
-                A nice blend of software craftsmanship and data engineering
-                expertise, dedicated to building scalable and efficient
-                solutions that drive business value.
+                Results-driven Data Engineer and software developer with 4+
+                years of experience building scalable data pipelines, enterprise
+                web applications, and deployment workflows. Proficient in
+                Python, SQL, Laravel, and cloud infrastructure on AWS.
               </p>
               <a href="#about" className="inline-block">
                 <ChevronDown className="w-8 h-8 text-accent animate-bounce" />
@@ -522,9 +822,10 @@ export default function Portfolio() {
                         </p>
                         <p className="text-lg text-card-foreground leading-relaxed">
                           After an internship doing QA testing and IT support, I
-                          started as a Software Developer before transitioning
-                          into Data Engineering, where I now combine coding and
-                          data to build smarter, more efficient systems.
+                          started as a Software Developer before moving into Data
+                          Engineering at Cambridge, where I was promoted to Data
+                          Engineer in 2025. I also take on independent full-stack
+                          contract work, combining coding, data, and cloud delivery.
                         </p>
                       </>
                     ) : (
@@ -551,7 +852,7 @@ export default function Portfolio() {
                           reinforcing my understanding of how software and
                           hardware connect. Along the way, I explored different
                           operating systems like Linux (trying out distros such
-                          as Kali, Ubuntu, and even Arch — which I uninstalled
+                          as Kali, Ubuntu, and even Arch (which I uninstalled
                           pretty quickly) and MacOS, expanding my perspective on
                           how each system offers a unique environment and
                           workflow.
@@ -566,9 +867,17 @@ export default function Portfolio() {
                           After graduation, I started my career as a Software
                           Developer, gaining nearly two years of experience
                           building and maintaining software solutions. Later, I
-                          transitioned to Data Engineering, where I found the
+                          transitioned to Data Engineering at Cambridge
+                          University Press & Assessment, where I found the
                           perfect balance between my love for coding and
-                          data-driven problem-solving.
+                          data-driven problem-solving, and was promoted to Data
+                          Engineer in 2025.
+                        </p>
+                        <p>
+                          Alongside that role, I have delivered independent
+                          full-stack contract work: Laravel and PHP marketing
+                          sites, DNS and CDN configuration, Nginx on AWS EC2, and
+                          integrations such as GoHighLevel CRM for lead capture.
                         </p>
                         <p>
                           Outside of work, I'm still that curious tinkerer who
@@ -603,132 +912,69 @@ export default function Portfolio() {
                   Experience
                 </h2>
                 <a
-                  href="/Gueco-resume5-pub.pdf"
+                  href="/Gueco-Resume7.pdf"
                   download
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent text-accent-foreground font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
                 >
-                  Download latest resume
+                  Download resume
                   <ExternalLink className="w-4 h-4" />
                 </a>
               </div>
               <div className="space-y-6">
-                {experiences.map((exp, index) => (
-                  <Card
-                    key={index}
-                    className="bg-card border-2 border-border shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-accent/10 overflow-hidden hover:border-accent/50 relative group"
-                  >
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-accent to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <CardHeader
-                      className="cursor-pointer hover:bg-accent/5 transition-colors duration-200"
-                      onClick={() =>
-                        setExpandedExperience(
-                          expandedExperience === index ? null : index
-                        )
-                      }
+                {cambridgeCareerPair && (
+                  <div className="rounded-2xl border border-accent/30 bg-gradient-to-b from-muted/25 to-muted/5 p-4 md:p-5 space-y-4 shadow-sm ring-1 ring-accent/10">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 border-b border-border/70 pb-3">
+                      <Briefcase className="w-4 h-4 text-accent shrink-0" />
+                      <span className="text-sm font-semibold text-foreground">
+                        {experiences[0].company}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        Same employer, role progression
+                      </span>
+                    </div>
+                    <ExperienceMotionCard
+                      exp={experiences[0]}
+                      index={0}
+                      expandedExperience={expandedExperience}
+                      setExpandedExperience={setExpandedExperience}
+                      variant="cambridgeCurrent"
+                    />
+                    <div
+                      className="flex items-center gap-3 pl-2 md:pl-3 py-0.5"
+                      aria-hidden
                     >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <CardTitle className="text-2xl text-card-foreground mb-2">
-                            {exp.title}
-                          </CardTitle>
-                          <CardDescription className="text-muted-foreground text-base">
-                            {exp.company} • {exp.period}
-                          </CardDescription>
-                        </div>
-                        <ChevronDown
-                          className={`w-6 h-6 text-accent transition-transform duration-300 ${
-                            expandedExperience === index ? "rotate-180" : ""
-                          }`}
-                        />
+                      <div className="flex flex-col items-center self-stretch w-5 shrink-0">
+                        <span className="block w-px flex-1 min-h-[6px] bg-accent/45 rounded-full" />
+                        <span className="my-0.5 flex h-2 w-2 shrink-0 items-center justify-center rounded-full border-2 border-accent/50 bg-background" />
+                        <span className="block w-px flex-1 min-h-[6px] bg-accent/25 rounded-full" />
                       </div>
-                      <p className="text-card-foreground mt-4">
-                        {exp.description}
-                      </p>
-                    </CardHeader>
-
-                    {expandedExperience === index && (
-                      <CardContent className="pt-0 animate-fade-in">
-                        <div className="space-y-6">
-                          {exp.techStack && (
-                            <div className="bg-muted/50 rounded-lg p-6 border-l-4 border-accent">
-                              <h4 className="font-semibold text-card-foreground mb-3 flex items-center gap-2">
-                                <Code2 className="w-5 h-5 text-accent" />
-                                Tech Stack
-                              </h4>
-
-                              <div className="flex flex-wrap gap-2">
-                                {exp.techStack.map((tech, i) => (
-                                  <span
-                                    key={i}
-                                    className="px-3 py-1 bg-accent text-accent-foreground rounded-full text-sm font-medium shadow-sm"
-                                  >
-                                    {tech}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-
-                          <div className="bg-muted/50 rounded-lg p-6 border-l-4 border-primary">
-                            <h4 className="font-semibold text-card-foreground mb-3 flex items-center gap-2">
-                              <Terminal className="w-5 h-5 text-primary" />
-                              Day-to-Day Responsibilities
-                            </h4>
-                            <ul className="space-y-2">
-                              {exp.dayToDay.map((task, i) => (
-                                <li
-                                  key={i}
-                                  className="flex items-start gap-2 text-card-foreground"
-                                >
-                                  <span className="text-accent mt-1">•</span>
-                                  <span>{task}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-
-                          <div className="bg-muted/50 rounded-lg p-6 border-l-4 border-secondary">
-                            <h4 className="font-semibold text-card-foreground mb-3 flex items-center gap-2">
-                              <Lightbulb className="w-5 h-5 text-secondary" />
-                              What I've Learned
-                            </h4>
-                            <ul className="space-y-2">
-                              {exp.learned.map((item, i) => (
-                                <li
-                                  key={i}
-                                  className="flex items-start gap-2 text-card-foreground"
-                                >
-                                  <span className="text-accent mt-1">•</span>
-                                  <span>{item}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-
-                          {exp.projectSummaries && (
-                            <div className="bg-muted/50 rounded-lg p-6 border-l-4 border-accent">
-                              <h4 className="font-semibold text-card-foreground mb-3 flex items-center gap-2">
-                                <Briefcase className="w-5 h-5 text-accent" />
-                                Project Summaries
-                              </h4>
-                              <ul className="space-y-2">
-                                {exp.projectSummaries.map((project, i) => (
-                                  <li
-                                    key={i}
-                                    className="flex items-start gap-2 text-card-foreground"
-                                  >
-                                    <span className="text-accent mt-1">•</span>
-                                    <span>{project}</span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-                        </div>
-                      </CardContent>
-                    )}
-                  </Card>
-                ))}
+                      <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                        Then
+                      </span>
+                    </div>
+                    <ExperienceMotionCard
+                      exp={experiences[1]}
+                      index={1}
+                      expandedExperience={expandedExperience}
+                      setExpandedExperience={setExpandedExperience}
+                      variant="cambridgeJuniorUnder"
+                    />
+                  </div>
+                )}
+                {experiences
+                  .slice(cambridgeCareerPair ? 2 : 0)
+                  .map((exp, i) => {
+                    const index = i + (cambridgeCareerPair ? 2 : 0);
+                    return (
+                      <ExperienceMotionCard
+                        key={index}
+                        exp={exp}
+                        index={index}
+                        expandedExperience={expandedExperience}
+                        setExpandedExperience={setExpandedExperience}
+                      />
+                    );
+                  })}
               </div>
             </div>
           </section>
@@ -741,8 +987,15 @@ export default function Portfolio() {
               </h2>
               <div className="space-y-6">
                 {projects.map((project, index) => (
-                  <Card
+                  <motion.div
                     key={index}
+                    layout
+                    transition={{
+                      layout: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
+                    }}
+                    className="relative"
+                  >
+                  <Card
                     className="bg-card border-2 border-border shadow-lg transition-all duration-300 hover:shadow-xl hover:shadow-accent/10 overflow-hidden hover:border-accent/50 relative group"
                   >
                     <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -772,8 +1025,26 @@ export default function Portfolio() {
                       </div>
                     </CardHeader>
 
-                    {expandedProject === index && (
-                      <CardContent className="pt-0 animate-fade-in">
+                    <AnimatePresence initial={false}>
+                      {expandedProject === index && (
+                        <motion.div
+                          key={`project-expand-${index}`}
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{
+                            height: {
+                              duration: 0.42,
+                              ease: [0.33, 1, 0.68, 1],
+                            },
+                            opacity: {
+                              duration: 0.28,
+                              ease: "easeOut",
+                            },
+                          }}
+                          style={{ overflow: "hidden" }}
+                        >
+                          <CardContent className="pt-0 pb-6 border-0 shadow-none">
                         <div className="space-y-6">
                           {/* Project Image (supports image or video; videos loop) */}
                           <div className="rounded-lg overflow-hidden shadow-lg border-2 border-accent/30 ring-4 ring-accent/10">
@@ -858,6 +1129,24 @@ export default function Portfolio() {
                               />
                             )}
                           </div>
+
+                          {"repoUrl" in project &&
+                            typeof (project as { repoUrl?: string }).repoUrl ===
+                              "string" &&
+                            (project as { repoUrl: string }).repoUrl && (
+                              <div className="flex justify-center">
+                                <a
+                                  href={(project as { repoUrl: string }).repoUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-muted border border-border text-card-foreground font-medium hover:border-accent hover:text-accent transition-colors"
+                                >
+                                  <Github className="w-5 h-5" />
+                                  View on GitHub
+                                </a>
+                              </div>
+                            )}
 
                           <div className="bg-muted/50 rounded-lg p-6 border-l-4 border-accent">
                             <h4 className="font-semibold text-card-foreground mb-3 flex items-center gap-2">
@@ -1041,8 +1330,11 @@ export default function Portfolio() {
                           )}
                         </div>
                       </CardContent>
-                    )}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </Card>
+                  </motion.div>
                 ))}
               </div>
             </div>
@@ -1224,7 +1516,7 @@ export default function Portfolio() {
                   <p className="text-card-foreground italic leading-relaxed text-sm">
                     “Do not fear, for I am with you; do not be dismayed, for I
                     am your God. I will strengthen you and help you; I will
-                    uphold you with my righteous right hand.” — Isaiah 41:10
+                    uphold you with my righteous right hand.” (Isaiah 41:10)
                   </p>
                 </div>
 
@@ -1235,7 +1527,7 @@ export default function Portfolio() {
                   <p className="text-card-foreground italic leading-relaxed text-sm">
                     “When everything seems to be going against you, remember
                     that the airplane takes off against the wind, not with it.”
-                    — Henry Ford
+                    (Henry Ford)
                   </p>
                 </div>
 
@@ -1245,7 +1537,7 @@ export default function Portfolio() {
                   </p>
                   <p className="text-card-foreground italic leading-relaxed text-sm">
                     “Don’t aim to be the best in the world. Aim to be the best
-                    for the world.” — Unknown
+                    for the world.” (Unknown)
                   </p>
                 </div>
               </div>
