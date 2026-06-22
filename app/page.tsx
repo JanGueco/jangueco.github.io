@@ -20,6 +20,7 @@ import {
   BookOpen,
   Sun,
   Moon,
+  Sparkles,
 } from "lucide-react";
 import {
   Card,
@@ -494,6 +495,7 @@ export default function Portfolio() {
     {
       title: "GreenConvert",
       type: "Personal",
+      vibeCoded: true,
       summary:
         "A full-stack image and video converter to WebP and WebM with a dark eco-themed UI and estimates of energy and CO₂ savings from smaller file sizes. FastAPI backend (Pillow, ffmpeg) and a React (Vite) plus Tailwind frontend.",
       media: "/green-image-converter-placeholder.svg",
@@ -1009,9 +1011,22 @@ export default function Portfolio() {
                     >
                       <div className="flex justify-between items-start">
                         <div>
-                          <CardTitle className="flex items-center gap-2 text-2xl text-card-foreground mb-2">
+                          <CardTitle className="flex flex-wrap items-center gap-2 text-2xl text-card-foreground mb-2">
                             {project.title} -{" "}
-                            <span className="text-xs pt-2">{project.type}</span>
+                            <span className="inline-flex items-center gap-1.5 text-xs pt-2">
+                              {project.type}
+                              {"vibeCoded" in project && project.vibeCoded && (
+                                <>
+                                  <Sparkles
+                                    className="w-3.5 h-3.5 text-accent"
+                                    aria-label="AI-assisted"
+                                  />
+                                  <span className="text-[10px] font-medium lowercase tracking-wide text-muted-foreground">
+                                    vibe coded
+                                  </span>
+                                </>
+                              )}
+                            </span>
                           </CardTitle>
                           <CardDescription className="text-card-foreground text-base mt-2">
                             {project.summary}
