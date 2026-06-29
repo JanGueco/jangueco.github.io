@@ -41,6 +41,20 @@ type PortfolioExperience = {
   dayToDay: string[];
   learned: string[];
   projectSummaries?: string[];
+  highlight?: string;
+};
+
+type PortfolioProject = {
+  title: string;
+  type: string;
+  summary: string;
+  media?: string;
+  techStack: string[];
+  learned: string[];
+  bonuses: Array<{ text: string; media: string }>;
+  vibeCoded?: boolean;
+  repoUrl?: string;
+  highlight?: string;
 };
 
 function ExperienceMotionCard({
@@ -54,11 +68,16 @@ function ExperienceMotionCard({
   index: number;
   expandedExperience: number | null;
   setExpandedExperience: (v: number | null) => void;
-  variant?: "default" | "cambridgeCurrent" | "cambridgeJuniorUnder";
+  variant?:
+    | "default"
+    | "cambridgeCurrent"
+    | "cambridgeJuniorUnder"
+    | "emsClientDelivery"
+    | "emsInternalConcurrent";
 }) {
   const isOpen = expandedExperience === index;
   const branchWrap =
-    variant === "cambridgeJuniorUnder"
+    variant === "cambridgeJuniorUnder" || variant === "emsInternalConcurrent"
       ? "ml-1 border-l-2 border-accent/40 pl-4 md:ml-2 md:pl-5 bg-muted/10 rounded-l-lg"
       : "";
 
@@ -86,6 +105,16 @@ function ExperienceMotionCard({
           {variant === "cambridgeJuniorUnder" && (
             <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
               Prior role, same organization
+            </p>
+          )}
+          {variant === "emsClientDelivery" && (
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-accent mb-2">
+              Client delivery
+            </p>
+          )}
+          {variant === "emsInternalConcurrent" && (
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+              Internal security tooling
             </p>
           )}
           <div className="flex justify-between items-start">
@@ -202,6 +231,12 @@ function ExperienceMotionCard({
                       </ul>
                     </div>
                   )}
+
+                  {exp.highlight && (
+                    <blockquote className="bg-muted/50 rounded-lg p-6 border-l-4 border-secondary italic text-card-foreground leading-relaxed">
+                      {exp.highlight}
+                    </blockquote>
+                  )}
                 </div>
               </CardContent>
             </motion.div>
@@ -284,7 +319,7 @@ export default function Portfolio() {
       company: "Cambridge University Press & Assessment",
       period: "2025 - Present",
       description:
-        "Promoted from Junior Data Engineer in 2025. I deepen Digital Sustainability delivery with PySpark validation, SQL-first pipeline optimization, and AI-assisted discovery, including a proof-of-concept RAG system and executive-facing carbon reporting.",
+        "Promoted from Junior Data Engineer in 2025. I deepen Digital Sustainability delivery with PySpark validation, SQL-first pipeline optimization, and AI-assisted discovery, including a proof-of-concept RAG system and carbon reporting for executives.",
 
       techStack: [
         "Python",
@@ -306,8 +341,8 @@ export default function Portfolio() {
 
       dayToDay: [
         "Own Digital Sustainability delivery in an Agile and Scrum environment after promotion to Data Engineer",
-        "Spearheaded R&D for a Quick Carbon Calculator using Python for automated API ingestion and Matplotlib visualizations for executive reporting",
-        "Engineered data quality gates with PySpark, including automated validation checks for alignment and integrity between raw and transformed datasets",
+        "Led R&D for a Quick Carbon Calculator using Python for automated API ingestion and Matplotlib visualizations for executive reporting",
+        "Built data quality gates with PySpark, including automated validation checks for alignment and integrity between raw and transformed datasets",
         "Optimized the Digital Sustainability pipeline by simplifying legacy processes and SQL transformations to improve carbon assessment speed and accuracy",
         "Delivered a proof-of-concept RAG system that ingested Confluence documentation into an AI knowledge base using Python, n8n workflow orchestration, and a React front end",
         "Authored technical methodologies and documentation for scripts and assessment findings to support scalability and team alignment",
@@ -368,7 +403,7 @@ export default function Portfolio() {
         "Collaborating with diverse teams and cultures within a global organization",
         "Working with large datasets and optimizing data workflows for scale and performance",
         "Troubleshooting complex data issues and applying analytical problem-solving skills",
-        "Using AI and LLM tools to streamline data engineering and discovery",
+        "Using AI and LLM tools to speed up data engineering and discovery",
         "Gaining a deeper understanding of digital sustainability and carbon footprint assessment methodologies",
         "Writing professional reports and presenting findings to both technical and non-technical audiences",
         "Gathering requirements and insights through effective communication and stakeholder engagement",
@@ -389,7 +424,7 @@ export default function Portfolio() {
       company: "Enterprise Management Solutions",
       period: "2025 - 2026",
       description:
-        "Independent contract building high-conversion marketing sites and full deployment pipelines for clients, with Laravel and PHP on the stack plus DNS, CDN, and Nginx on AWS from design to go-live.",
+        "Independent contract work: marketing sites, deployment pipelines, and CRM automation for clients. I handled design through Laravel/PHP development, DNS, deployment, and GoHighLevel workflow automation.",
 
       techStack: [
         "Laravel",
@@ -406,24 +441,90 @@ export default function Portfolio() {
         "GoDaddy (DNS)",
         "GoHighLevel (GHL)",
         "REST APIs",
+        "Python",
+        "requests",
+        "Cursor AI",
+        "Google Gemini",
+        "Claude",
       ],
 
       dayToDay: [
-        "Engineered high-conversion marketing websites with Laravel, PHP, and Blade, using custom HTML, CSS, and JavaScript aligned to client branding",
-        "Architected end-to-end deployment: DNS via GoDaddy and Cloudflare, TLS, and Nginx-served apps on AWS EC2",
+        "Built marketing websites with Laravel, PHP, and Blade, using custom HTML, CSS, and JavaScript to match client branding",
+        "Set up full deployments: DNS through GoDaddy and Cloudflare, TLS, and Nginx on AWS EC2",
         "Integrated GoHighLevel (GHL) CRM for lead capture and built third-party workflows including food ordering and financial services connections",
+        "Built a Python automation tool that provisions GoHighLevel intake calendars and notification workflows for Freedom Health Systems across 17 sub-account locations, replacing manual per-location setup",
       ],
 
       learned: [
         "Turning client brand requirements into polished, maintainable Laravel and Blade front ends",
         "Owning DNS/CDN and reverse-proxy configuration for production hosting on cloud VMs",
         "Shipping CRM-backed funnels and complex external API integrations under contract timelines",
+        "Designing config-driven automation so the same workflow can be rolled out consistently across many client locations",
+        "Used Cursor AI for in-editor development and Gemini and Claude for research, debugging, and prompt work. I picked the right tool for each task instead of relying on just one.",
       ],
 
       projectSummaries: [
-        "Delivered full-stack Laravel marketing properties with bespoke UI/UX and production-ready deployment on Nginx within EC2.",
-        "Connected GHL CRM and other APIs to unlock lead capture and industry-specific operational workflows.",
+        "Built Laravel marketing sites with custom UI and deployed them on Nginx in EC2.",
+        "Connected GHL CRM and other APIs for lead capture and workflows like food ordering and financial services.",
+        "Built a GoHighLevel CRM automation tool for Freedom Health Systems that provisions round-robin intake calendars and notification rules across 17 behavioral health locations from shared templates.",
       ],
+    },
+    {
+      title: "Security & Internal Tooling (Concurrent)",
+      company: "Enterprise Management Solutions",
+      period: "2025 - 2026",
+      description:
+        "The Chief Security Officer asked me to build internal security tooling: AWS vulnerability reporting, mail ingestion, and a security findings dashboard. I did this alongside client contract work, using Cursor, Gemini, and Claude.",
+
+      techStack: [
+        "Django",
+        "Django REST Framework",
+        "FastAPI",
+        "React",
+        "TypeScript",
+        "PostgreSQL",
+        "SQLAlchemy",
+        "Gmail API",
+        "Google Pub/Sub",
+        "Google Gemini",
+        "Google OAuth",
+        "boto3",
+        "AWS S3",
+        "AWS Inspector2",
+        "Prowler",
+        "pandas",
+        "pytest",
+        "Gunicorn",
+        "Cron",
+        "Cursor AI",
+        "Claude",
+      ],
+
+      dayToDay: [
+        "Worked with the Chief Security Officer to understand what he needed, then built the tooling. I chose the tech stack and how each solution was implemented",
+        "Designed and built a Django + React security findings dashboard that ingests monthly AWS Inspector and Prowler scans and surfaces prioritized remediation actions",
+        "Built a FastAPI-based Virtual Mailroom service that automatically captures email attachments via Gmail, stores them in AWS S3, and extracts searchable text using AI-powered OCR",
+        "Automated a monthly AWS security reporting pipeline (Python, boto3, cron) exporting vulnerability and compliance scan data to S3",
+        "Built supporting tools (an AWS security checklist app and a standalone report generator) to track audit runbooks and analyze scan findings for executive reporting",
+      ],
+
+      learned: [
+        "Designing event-driven systems (Gmail Pub/Sub webhooks, cron-based pipelines) that process data reliably without manual intervention",
+        "Building internal tools from ingestion and database design through to a deployed, access-controlled frontend",
+        "Applying security-conscious patterns in practice: IAM instance-profile auth, domain-restricted OAuth, least-privilege access, and audit-friendly data handling",
+        "Balancing internal security tooling work alongside client delivery commitments",
+        "Built five internal tools using Cursor AI for day-to-day coding and Gemini and Claude for architecture, security research, and prompting",
+      ],
+
+      projectSummaries: [
+        "Built an internal security findings dashboard (Django + React) that ingests monthly AWS Inspector and Prowler scans, tracks vulnerabilities over time, and surfaces prioritized remediation actions for the security team.",
+        "Developed a Virtual Mailroom service (FastAPI) that automatically captures email attachments via Gmail, stores them in AWS S3, extracts text with AI-powered OCR, and makes them searchable internally.",
+        "Automated a monthly AWS security reporting pipeline (Python, boto3, cron) that exports vulnerability and compliance scan data to S3 for downstream analysis.",
+        "Built an internal AWS security checklist app (329 tracked tasks across 7 runbooks) and a standalone report generator analyzing 1,700+ combined security findings, surfacing patterns like a 556-entry SQL injection cluster.",
+      ],
+
+      highlight:
+        "Our Chief Security Officer asked for five internal tools: a security dashboard, mail automation, a reporting pipeline, a checklist app, and a report generator. I turned his requirements into working systems, picked the tech for each one, and kept up with client work at the same time.",
     },
     {
       title: "Junior Software Developer / OutSystems Developer",
@@ -446,7 +547,7 @@ export default function Portfolio() {
       dayToDay: [
         "Built and enhanced enterprise-grade web applications for Coca-Cola and MPTC on the OutSystems platform to meet large-scale client requirements",
         "Ran end-to-end deployment workflows from development to production with troubleshooting and production support",
-        "Collaborated in Agile teams (daily scrums, sprint commitments) and authored user manuals to streamline handovers and improve the end-user experience",
+        "Collaborated in Agile teams (daily scrums, sprint commitments) and authored user manuals to make handovers smoother and improve the end-user experience",
         "Implemented features, resolved bugs across multiple projects, and participated in code reviews",
         "Maintained technical documentation for modules and workflows; verified production releases post-deployment",
       ],
@@ -465,7 +566,7 @@ export default function Portfolio() {
         "Contributed to MPTC’s mobile app, MPT DriveHub, used by millions of drivers for toll payments, balance management, and account monitoring. Responsibilities included implementing new features, fixing production bugs, and enhancing user experience.",
         "Collaborated on Coca-Cola’s Distribution Management System (DMS), improving logistics operations by adding new modules, fixing bugs, and optimizing performance for high-volume data handling.",
         "Assisted in Coca-Cola’s Learning Management System (LMS) project, performing QA testing, unit tests, and writing comprehensive user manuals for training and onboarding materials.",
-        "Developed Coca-Cola’s Worker Safety and Compliance Application from the ground up for both web and mobile, ensuring compliance tracking, safety audits, and reporting features were delivered seamlessly.",
+        "Developed Coca-Cola's Worker Safety and Compliance Application from the ground up for both web and mobile, ensuring compliance tracking, safety audits, and reporting features shipped on schedule.",
       ],
     },
     {
@@ -491,7 +592,154 @@ export default function Portfolio() {
     },
   ];
 
-  const projects = [
+  const projects: PortfolioProject[] = [
+    {
+      title: "GHL Round Robin Calendar Automation",
+      type: "Professional",
+      vibeCoded: true,
+      summary:
+        "A Python CLI tool built for Freedom Health Systems that automates GoHighLevel intake calendar setup across agency sub-accounts. It provisions round-robin calendars, staff availability, and notification rules from shared templates instead of manual per-location configuration.",
+      techStack: [
+        "Python",
+        "GoHighLevel API v2",
+        "requests",
+        "python-dotenv",
+        "JSON Templating",
+      ],
+      learned: [
+        "Built a config-driven pipeline that provisions 3 round-robin calendars (Video, Phone, In Person) per location, with auto-resolved staff schedules and 24 notification rules per calendar",
+        "Designed bulk multi-location rollout (17 agencies) with per-agency config overlays, dry-run validation, and error-tolerant batch execution",
+        "Solved GHL API quirks (field-name mismatches, create-vs-update notification behavior) through deduplication and workaround logic",
+      ],
+      highlight:
+        "Automated calendar onboarding for 17 Freedom Health Systems sub-accounts: staff availability, schedule associations, and about 72 notification rules per location. What used to be fully manual setup is now config-driven.",
+      bonuses: [],
+    },
+    {
+      title: "Security Findings Dashboard",
+      type: "Professional",
+      vibeCoded: true,
+      summary:
+        "An internal Django + React web application that ingests monthly AWS Inspector and Prowler security scan exports, normalizes findings, and visualizes month-over-month deltas, repo-level vulnerabilities, and prioritized action items for a security team.",
+      techStack: [
+        "Python",
+        "Django",
+        "Django REST Framework",
+        "React",
+        "TypeScript",
+        "PostgreSQL",
+        "AWS S3",
+        "Google OAuth",
+        "Gunicorn",
+        "Nginx",
+      ],
+      learned: [
+        "Built the full system: ingestion pipeline for AWS Inspector/Prowler exports, REST API, and React dashboard",
+        "Implemented stable-ID delta tracking (new / carried / \"no longer observed\") instead of naive resolved/unresolved status",
+        "Built an insights layer with severity-based health scoring (A–F grading), OWASP Top 10 mapping, and plain-English fix recommendations",
+        "Added Google OAuth with domain-restricted access, role-based admin panel, and policy acknowledgment workflow",
+        "Deployed to production on EC2 (Gunicorn/Nginx/PostgreSQL) with an automated deploy script",
+        "Covered ingest, API, and insights logic with ~68 backend tests",
+      ],
+      highlight:
+        "I handled all 7 commits on this one. Built the ingestion, API, and React dashboard so the security team had a place to review findings instead of digging through raw scan exports.",
+      bonuses: [],
+    },
+    {
+      title: "Virtual Mailroom",
+      type: "Professional",
+      vibeCoded: true,
+      summary:
+        "An event-driven FastAPI service that automatically ingests PDF/DOCX email attachments from a monitored Gmail inbox via Pub/Sub, stores them in AWS S3, extracts searchable text using Gemini OCR, and exposes the results through an internal intranet API. The Legal team uses it most for searching and retrieving OCR'd text from incoming mail attachments.",
+      techStack: [
+        "Python",
+        "FastAPI",
+        "Gmail API",
+        "Google Pub/Sub",
+        "AWS S3",
+        "PostgreSQL",
+        "SQLAlchemy",
+        "Google Gemini",
+        "pytest",
+      ],
+      learned: [
+        "Built the full ingestion pipeline: Gmail webhook → attachment download → S3 storage → OCR → database",
+        "Solved Gmail history-cursor edge cases to prevent missed or duplicate message syncs, with automatic watch renewal every ~7 days",
+        "Implemented idempotent attachment processing to prevent duplicate records on retries",
+        "Built a token-secured intranet REST API for paginated search across messages and OCR'd text",
+        "Wrote 35 unit/integration tests covering webhook, database, OCR, and S3 logic",
+        "Delivered a production tool adopted by the Legal team for searching and retrieving OCR'd text from incoming mail attachments",
+      ],
+      highlight:
+        "Built automatic Gmail watch renewal and history-cursor recovery so mail sync stays reliable without someone babysitting it. A lot of simple Gmail integrations skip that.",
+      bonuses: [],
+    },
+    {
+      title: "Cybersecurity Exports",
+      type: "Professional",
+      vibeCoded: true,
+      summary:
+        "A cron-scheduled pipeline on AWS EC2 that runs monthly security data collection. It exports AWS Inspector2 vulnerability findings and Prowler cloud audit results to S3 as standardized JSON for the dashboard to ingest.",
+      techStack: [
+        "Python",
+        "Bash",
+        "boto3",
+        "AWS Inspector2",
+        "Prowler",
+        "AWS S3",
+        "KMS",
+        "Cron",
+      ],
+      learned: [
+        "Built Python export scripts for AWS Inspector2 (filtered to CRITICAL/HIGH active findings) and a Prowler CLI runner, both uploading standardized JSON to S3",
+        "Designed a resilient orchestrator script that continues running remaining steps even if one export fails",
+        "Implemented IAM instance-profile-only authentication (no static AWS keys) for security best practice",
+        "Wrote an idempotent cron installer and a prerequisites checker script to validate environment setup before runs",
+        "Documented an extensibility guide for adding new security data sources to the pipeline",
+      ],
+      highlight:
+        "Built this pipeline to feed the Security Findings Dashboard. The export side and the dashboard are meant to work together as one internal security toolchain.",
+      bonuses: [],
+    },
+    {
+      title: "AWS Security Checklist App",
+      type: "Professional",
+      vibeCoded: true,
+      summary:
+        "A zero-dependency internal web app for tracking recurring AWS security audit and hardening procedures as interactive, checkable runbooks. Covers Security Hub, Prowler, Inspector, Gitleaks, and S3 archiving workflows.",
+      techStack: [
+        "Python (stdlib)",
+        "Vanilla JavaScript",
+        "HTML/CSS",
+        "localStorage",
+      ],
+      learned: [
+        "Built a lightweight Python HTTP server and vanilla JS frontend with zero external dependencies",
+        "Designed a Markdown-to-JSON compiler so checklists can be authored in plain Markdown and converted into structured runbooks",
+        "Implemented dual persistence (localStorage + server file sync) so audit progress survives browser refreshes and can be backed up",
+        "Authored 7 operational runbook templates covering 329 total tracked tasks across AWS security workflows",
+      ],
+      highlight:
+        "Built with zero dependencies: no frameworks, no package managers. The idea was to keep it easy to run anywhere internally.",
+      bonuses: [],
+    },
+    {
+      title: "AWS Security Report Generator",
+      type: "Professional",
+      vibeCoded: true,
+      summary:
+        "A set of Python scripts and static HTML dashboards that transform raw AWS Inspector and Prowler scan exports into readable executive summaries and repo-level remediation reports.",
+      techStack: ["Python", "pandas", "JavaScript", "HTML/CSS"],
+      learned: [
+        "Built a CLI analysis tool that summarizes severity breakdowns, top CVEs/detectors, and combined \"immediate attention\" findings from Inspector and Prowler exports",
+        "Developed ETL scripts to flatten deeply nested Inspector/Prowler JSON into flat CSV for easier analysis",
+        "Generated static HTML dashboards (no backend required) for executive-level and repo-level vulnerability reporting",
+        "Processed and surfaced insights from 1,700+ combined Prowler and Inspector findings in sample runs, including identifying a recurring 556-entry SQL injection pattern",
+      ],
+      highlight:
+        "Found a recurring SQL injection pattern across 556 findings and turned a pile of raw scan output into a prioritized remediation list.",
+      bonuses: [],
+    },
     {
       title: "GreenConvert",
       type: "Personal",
@@ -546,7 +794,7 @@ export default function Portfolio() {
       learned: [
         "How small changes in initial conditions cause drastically different results (chaos theory in action!)",
         "Mathematical modeling of motion and gravity",
-        "Leveraging Processing for creating real-time physics visualizations",
+        "Using Processing for creating real-time physics visualizations",
       ],
       bonuses: [
         {
@@ -577,7 +825,7 @@ export default function Portfolio() {
       title: "YouTube to MP3 Converter",
       type: "Personal",
       summary:
-        "A desktop application that converts YouTube videos to MP3 using Pytube and PyQt6. The app features a simple graphical interface and handles downloads and file conversions seamlessly.",
+        "A desktop application that converts YouTube videos to MP3 using Pytube and PyQt6. The app has a simple graphical interface and handles downloads and file conversions in the background.",
       media: "/YouTubeToMp3.webp",
       techStack: ["Python", "Pytube", "PyQt6", "ffmpeg"],
       learned: [
@@ -613,13 +861,13 @@ export default function Portfolio() {
     {
       title: "Large Language Models (LLMs) and Agentic Systems",
       description:
-        "Exploring how AI agents and large language models can automate complex tasks, streamline workflows, and support data-driven decision-making.",
+        "Exploring how LLMs and agentic systems can help with real tasks at work.",
       progress: "Beginner",
     },
     {
       title: "Full-Stack Web Development with React, TypeScript, and Django",
       description:
-        "Building full-fledged web applications using modern front-end frameworks and scalable Django backends, focusing on clean architecture and user experience.",
+        "Building web apps with React, TypeScript, and Django backends.",
       progress: "Intermediate",
     },
     {
@@ -712,6 +960,21 @@ export default function Portfolio() {
     experiences[0].title === "Data Engineer" &&
     experiences[1].title === "Junior Data Engineer";
 
+  const emsStartIndex = cambridgeCareerPair ? 2 : 0;
+  const emsConcurrentPair =
+    experiences.length >= emsStartIndex + 2 &&
+    experiences[emsStartIndex].company === "Enterprise Management Solutions" &&
+    experiences[emsStartIndex + 1].company ===
+      "Enterprise Management Solutions" &&
+    experiences[emsStartIndex].period === experiences[emsStartIndex + 1].period &&
+    experiences[emsStartIndex].title ===
+      "Full Stack Developer (Contractual - Independent)" &&
+    experiences[emsStartIndex + 1].title ===
+      "Security & Internal Tooling (Concurrent)";
+
+  const experienceSliceStart =
+    (cambridgeCareerPair ? 2 : 0) + (emsConcurrentPair ? 2 : 0);
+
   return (
     <>
       <button
@@ -785,10 +1048,9 @@ export default function Portfolio() {
                 Data Engineer & Software Developer
               </p>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-12 leading-relaxed">
-                Results-driven Data Engineer and software developer with 4+
-                years of experience building scalable data pipelines, enterprise
-                web applications, and deployment workflows. Proficient in
-                Python, SQL, Laravel, and cloud infrastructure on AWS.
+                Data engineer and software developer with 4+ years building data
+                pipelines, web apps, and deployment workflows. I work mainly in
+                Python, SQL, Laravel, and AWS.
               </p>
               <a href="#about" className="inline-block">
                 <ChevronDown className="w-8 h-8 text-accent animate-bounce" />
@@ -870,9 +1132,8 @@ export default function Portfolio() {
                           Developer, gaining nearly two years of experience
                           building and maintaining software solutions. Later, I
                           transitioned to Data Engineering at Cambridge
-                          University Press & Assessment, where I found the
-                          perfect balance between my love for coding and
-                          data-driven problem-solving, and was promoted to Data
+                          University Press & Assessment, where I found a good mix of
+                          coding and data-driven problem-solving, and was promoted to Data
                           Engineer in 2025.
                         </p>
                         <p>
@@ -963,10 +1224,50 @@ export default function Portfolio() {
                     />
                   </div>
                 )}
+                {emsConcurrentPair && (
+                  <div className="rounded-2xl border border-accent/30 bg-gradient-to-b from-muted/25 to-muted/5 p-4 md:p-5 space-y-4 shadow-sm ring-1 ring-accent/10">
+                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 border-b border-border/70 pb-3">
+                      <Briefcase className="w-4 h-4 text-accent shrink-0" />
+                      <span className="text-sm font-semibold text-foreground">
+                        {experiences[emsStartIndex].company}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        Same employer, concurrent tracks
+                      </span>
+                    </div>
+                    <ExperienceMotionCard
+                      exp={experiences[emsStartIndex]}
+                      index={emsStartIndex}
+                      expandedExperience={expandedExperience}
+                      setExpandedExperience={setExpandedExperience}
+                      variant="emsClientDelivery"
+                    />
+                    <div
+                      className="flex items-center gap-3 pl-2 md:pl-3 py-0.5"
+                      aria-hidden
+                    >
+                      <div className="flex flex-col items-center self-stretch w-5 shrink-0">
+                        <span className="block w-px flex-1 min-h-[6px] bg-accent/45 rounded-full" />
+                        <span className="my-0.5 flex h-2 w-2 shrink-0 items-center justify-center rounded-full border-2 border-accent/50 bg-background" />
+                        <span className="block w-px flex-1 min-h-[6px] bg-accent/25 rounded-full" />
+                      </div>
+                      <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+                        Concurrent
+                      </span>
+                    </div>
+                    <ExperienceMotionCard
+                      exp={experiences[emsStartIndex + 1]}
+                      index={emsStartIndex + 1}
+                      expandedExperience={expandedExperience}
+                      setExpandedExperience={setExpandedExperience}
+                      variant="emsInternalConcurrent"
+                    />
+                  </div>
+                )}
                 {experiences
-                  .slice(cambridgeCareerPair ? 2 : 0)
+                  .slice(experienceSliceStart)
                   .map((exp, i) => {
-                    const index = i + (cambridgeCareerPair ? 2 : 0);
+                    const index = i + experienceSliceStart;
                     return (
                       <ExperienceMotionCard
                         key={index}
@@ -1062,9 +1363,9 @@ export default function Portfolio() {
                           <CardContent className="pt-0 pb-6 border-0 shadow-none">
                         <div className="space-y-6">
                           {/* Project Image (supports image or video; videos loop) */}
+                          {project.media && (
                           <div className="rounded-lg overflow-hidden shadow-lg border-2 border-accent/30 ring-4 ring-accent/10">
-                            {project.media ? (
-                              project.media.toLowerCase().endsWith(".mp4") ||
+                            {project.media.toLowerCase().endsWith(".mp4") ||
                               project.media.toLowerCase().endsWith(".webm") ? (
                                 <div className="relative">
                                   {/* media loading overlay */}
@@ -1135,15 +1436,9 @@ export default function Portfolio() {
                                     </button>
                                   )}
                                 </div>
-                              )
-                            ) : (
-                              <img
-                                src="/placeholder.svg"
-                                alt={project.title}
-                                className="w-full h-auto object-cover"
-                              />
-                            )}
+                              )}
                           </div>
+                          )}
 
                           {"repoUrl" in project &&
                             typeof (project as { repoUrl?: string }).repoUrl ===
@@ -1183,7 +1478,9 @@ export default function Portfolio() {
                           <div className="bg-muted/50 rounded-lg p-6 border-l-4 border-primary">
                             <h4 className="font-semibold text-card-foreground mb-3 flex items-center gap-2">
                               <Lightbulb className="w-5 h-5 text-primary" />
-                              What I Learned
+                              {project.type === "Professional"
+                                ? "Key Contributions"
+                                : "What I Learned"}
                             </h4>
                             <ul className="space-y-2">
                               {project.learned.map((item, i) => (
@@ -1197,6 +1494,12 @@ export default function Portfolio() {
                               ))}
                             </ul>
                           </div>
+
+                          {project.highlight && (
+                            <blockquote className="bg-muted/50 rounded-lg p-6 border-l-4 border-secondary italic text-card-foreground leading-relaxed">
+                              {project.highlight}
+                            </blockquote>
+                          )}
 
                           {/* Bonuses - collapsible list; media rendered same size as main media */}
                           {project.bonuses && project.bonuses.length > 0 && (
