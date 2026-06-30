@@ -474,7 +474,7 @@ export default function Portfolio() {
       company: "Enterprise Management Solutions",
       period: "2025 - 2026",
       description:
-        "The Chief Security Officer asked me to build internal security tooling: AWS vulnerability reporting, mail ingestion, and a security findings dashboard. I did this alongside client contract work, using Cursor, Gemini, and Claude.",
+        "The Chief Security Officer asked me to build internal security tooling: AWS vulnerability reporting and a security findings dashboard. The CTO asked for a mail ingestion service (Virtual Mailroom). I did this alongside client contract work, using Cursor, Gemini, and Claude.",
 
       techStack: [
         "Django",
@@ -501,9 +501,9 @@ export default function Portfolio() {
       ],
 
       dayToDay: [
-        "Worked with the Chief Security Officer to understand what he needed, then built the tooling. I chose the tech stack and how each solution was implemented",
+        "Worked with the Chief Security Officer and CTO on what each needed, then built the tooling. I chose the tech stack and how each solution was implemented",
         "Designed and built a Django + React security findings dashboard that ingests monthly AWS Inspector and Prowler scans and surfaces prioritized remediation actions",
-        "Built a FastAPI-based Virtual Mailroom service that automatically captures email attachments via Gmail, stores them in AWS S3, and extracts searchable text using AI-powered OCR",
+        "Built a FastAPI-based Virtual Mailroom service at the CTO's request that automatically captures email attachments via Gmail, stores them in AWS S3, and extracts searchable text using AI-powered OCR",
         "Automated a monthly AWS security reporting pipeline (Python, boto3, cron) exporting vulnerability and compliance scan data to S3",
         "Built supporting tools (an AWS security checklist app and a standalone report generator) to track audit runbooks and analyze scan findings for executive reporting",
       ],
@@ -518,13 +518,13 @@ export default function Portfolio() {
 
       projectSummaries: [
         "Built an internal security findings dashboard (Django + React) that ingests monthly AWS Inspector and Prowler scans, tracks vulnerabilities over time, and surfaces prioritized remediation actions for the security team.",
-        "Developed a Virtual Mailroom service (FastAPI) that automatically captures email attachments via Gmail, stores them in AWS S3, extracts text with AI-powered OCR, and makes them searchable internally.",
+        "Developed a Virtual Mailroom service (FastAPI) at the CTO's request that automatically captures email attachments via Gmail, stores them in AWS S3, extracts text with AI-powered OCR, and makes them searchable internally.",
         "Automated a monthly AWS security reporting pipeline (Python, boto3, cron) that exports vulnerability and compliance scan data to S3 for downstream analysis.",
         "Built an internal AWS security checklist app (329 tracked tasks across 7 runbooks) and a standalone report generator analyzing 1,700+ combined security findings, surfacing patterns like a 556-entry SQL injection cluster.",
       ],
 
       highlight:
-        "Our Chief Security Officer asked for five internal tools: a security dashboard, mail automation, a reporting pipeline, a checklist app, and a report generator. I turned his requirements into working systems, picked the tech for each one, and kept up with client work at the same time.",
+        "Our Chief Security Officer asked for the security dashboard, reporting pipeline, checklist app, and report generator. Our CTO asked for the mail automation (Virtual Mailroom). I built all five, chose the tech for each, and kept up with client work at the same time.",
     },
     {
       title: "Junior Software Developer / OutSystems Developer",
@@ -1175,7 +1175,7 @@ export default function Portfolio() {
                   Experience
                 </h2>
                 <a
-                  href="/Gueco-Resume7.pdf"
+                  href="/Gueco-Resume8.pdf"
                   download
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent text-accent-foreground font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
                 >

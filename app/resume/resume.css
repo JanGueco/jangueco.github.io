@@ -1,0 +1,473 @@
+/* Resume print page — screen preview + print optimization */
+
+:root {
+  --resume-cream: #faf8f5;
+  --resume-cream-deep: #f0ece6;
+  --resume-text: #1a1a1a;
+  --resume-muted: #5c5c5c;
+  --resume-bar: #e8e6e1;
+  --resume-bar-text: #333333;
+  --resume-body: 0.6875rem; /* ~11pt */
+  --resume-small: 0.625rem; /* ~10pt */
+  --resume-name: 1.375rem; /* ~22pt */
+  --resume-title: 0.75rem;
+  --resume-section: 0.6875rem;
+  --resume-a4-width: 210mm;
+  --resume-margin: 1.5cm;
+}
+
+html.resume-route,
+body.resume-route {
+  background: var(--resume-cream) !important;
+  min-height: 100%;
+}
+
+.resume-page {
+  --resume-cream: #faf8f5;
+  --resume-cream-deep: #f0ece6;
+  --resume-text: #1a1a1a;
+  --resume-muted: #5c5c5c;
+  --resume-bar: #e8e6e1;
+  --resume-bar-text: #333333;
+  --resume-body: 0.6875rem;
+  --resume-small: 0.625rem;
+  --resume-name: 1.375rem;
+  --resume-title: 0.75rem;
+  --resume-section: 0.6875rem;
+  --resume-a4-width: 210mm;
+  --resume-margin: 1.5cm;
+
+  min-height: 100vh;
+  background: var(--resume-cream);
+  color: var(--resume-text);
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  font-size: var(--resume-body);
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+.resume-screen-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: var(--resume-cream);
+  border-bottom: 1px solid var(--resume-bar);
+  backdrop-filter: blur(8px);
+}
+
+.resume-screen-toolbar button {
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border: 1px solid #ccc;
+  border-radius: 0.375rem;
+  background: white;
+  cursor: pointer;
+}
+
+.resume-screen-toolbar button:hover {
+  border-color: #888;
+}
+
+.resume-preview-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 1.75rem 1rem 3.5rem;
+  background: var(--resume-cream);
+}
+
+.resume-sheet {
+  width: 100%;
+  max-width: var(--resume-a4-width);
+  background: var(--resume-cream);
+  padding: var(--resume-margin);
+  position: relative;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+@media screen {
+  .resume-sheet {
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.04),
+      0 8px 28px rgba(0, 0, 0, 0.06);
+    border-radius: 2px;
+  }
+}
+
+/* Screen-only gap between virtual pages */
+@media screen {
+  .resume-page-spacer {
+    height: 1.5rem;
+    margin: 1.25rem calc(-1 * var(--resume-margin));
+    background: linear-gradient(
+      to bottom,
+      var(--resume-cream-deep) 0%,
+      var(--resume-cream) 100%
+    );
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow:
+      inset 0 4px 8px rgba(0, 0, 0, 0.03),
+      0 -2px 6px rgba(0, 0, 0, 0.02);
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+}
+
+/* Header */
+.resume-header {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.resume-photo {
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid #ddd;
+}
+
+.resume-header-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.resume-name {
+  font-size: var(--resume-name);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0 0 0.15rem;
+  color: var(--resume-text);
+}
+
+.resume-role {
+  font-size: var(--resume-title);
+  font-weight: 500;
+  color: var(--resume-muted);
+  margin: 0 0 0.6rem;
+}
+
+.resume-contact-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  font-size: var(--resume-small);
+  color: var(--resume-muted);
+}
+
+.resume-contact-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+}
+
+.resume-contact-item svg {
+  width: 0.75rem;
+  height: 0.75rem;
+  flex-shrink: 0;
+  opacity: 0.75;
+}
+
+.resume-contact-link {
+  position: relative;
+  z-index: 1;
+  color: inherit;
+  text-decoration: none;
+}
+
+.resume-contact-link:hover {
+  color: #1a5490;
+  text-decoration: underline;
+  text-decoration-color: #6b8cae;
+}
+
+.resume-contact-placeholder {
+  font-style: italic;
+  opacity: 0.85;
+}
+
+/* Sections */
+.resume-section {
+  margin-bottom: 1rem;
+}
+
+.resume-section-bar {
+  background: var(--resume-bar);
+  color: var(--resume-bar-text);
+  font-size: var(--resume-section);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.6rem;
+  margin-bottom: 0.6rem;
+  break-after: avoid;
+  page-break-after: avoid;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.resume-about {
+  margin: 0;
+  font-size: var(--resume-body);
+  line-height: 1.5;
+  color: var(--resume-text);
+}
+
+/* Experience / education entries */
+.resume-entry {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  gap: 0 0.75rem;
+  margin-bottom: 0.85rem;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.resume-entry-date {
+  font-size: var(--resume-small);
+  color: var(--resume-muted);
+  line-height: 1.35;
+  padding-top: 0.1rem;
+}
+
+.resume-entry-title {
+  font-size: var(--resume-body);
+  font-weight: 700;
+  margin: 0 0 0.1rem;
+  line-height: 1.3;
+}
+
+.resume-entry-company {
+  font-weight: 700;
+}
+
+.resume-entry-desc {
+  margin: 0.2rem 0 0.35rem;
+  font-size: var(--resume-small);
+  color: var(--resume-muted);
+  line-height: 1.4;
+}
+
+.resume-bullets {
+  margin: 0;
+  padding-left: 1rem;
+  font-size: var(--resume-small);
+  line-height: 1.4;
+}
+
+.resume-bullets li {
+  margin-bottom: 0.15rem;
+}
+
+.resume-bullets li:last-child {
+  margin-bottom: 0;
+}
+
+/* Skills */
+.resume-skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.15rem 1rem;
+  margin: 0;
+  padding-left: 1rem;
+  font-size: var(--resume-small);
+  list-style: disc;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.resume-skills-grid li {
+  margin-bottom: 0.1rem;
+}
+
+/* Project highlights */
+.resume-project {
+  margin-bottom: 0.75rem;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.resume-project-name {
+  font-size: var(--resume-body);
+  font-weight: 700;
+  margin: 0 0 0.15rem;
+}
+
+.resume-project-category {
+  font-weight: 500;
+  color: var(--resume-muted);
+}
+
+.resume-project-summary {
+  margin: 0 0 0.2rem;
+  font-size: var(--resume-small);
+  line-height: 1.4;
+}
+
+.resume-project-tech {
+  margin: 0 0 0.25rem;
+  font-size: var(--resume-small);
+  color: var(--resume-muted);
+  font-style: italic;
+  line-height: 1.35;
+}
+
+.resume-education-placeholder {
+  font-size: var(--resume-small);
+  color: #8b4513;
+  font-style: italic;
+  margin: 0 0 0.5rem;
+  padding: 0.35rem 0.5rem;
+  background: #fff8e6;
+  border: 1px dashed #d4a84b;
+  border-radius: 0.25rem;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+/* Screen-only visual gap before Skills (no CSS page breaks here) */
+@media screen {
+  .resume-page-break-after {
+    height: 1.5rem;
+    margin: 1.25rem calc(-1 * var(--resume-margin)) var(--resume-margin);
+    background: linear-gradient(
+      to bottom,
+      var(--resume-cream-deep) 0%,
+      var(--resume-cream) 100%
+    );
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow:
+      inset 0 4px 8px rgba(0, 0, 0, 0.03),
+      0 -2px 6px rgba(0, 0, 0, 0.02);
+  }
+
+  /* Mirror print page-2 top margin in screen preview */
+  .resume-section-skills {
+    padding-top: var(--resume-margin);
+  }
+}
+
+/* Print — own inset via padding so "Margins: None" in the browser still looks correct */
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  html,
+  body,
+  html.resume-route,
+  body.resume-route {
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    background-color: #faf8f5 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    -webkit-font-smoothing: auto !important;
+  }
+
+  /* System fonts embed reliably in PDF text layers (ATS-friendly) */
+  .resume-page,
+  .resume-sheet {
+    font-family: Arial, Helvetica, "Segoe UI", system-ui, sans-serif !important;
+  }
+
+  .resume-no-print {
+    display: none !important;
+  }
+
+  /* Cream background on every printed page (not just where content ends) */
+  .resume-sheet::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-color: #faf8f5;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Single break: Skills starts on a new page after Education */
+  .resume-section-education {
+    margin-bottom: var(--resume-margin);
+  }
+
+  .resume-section-skills {
+    break-before: page;
+    page-break-before: always;
+    padding-top: var(--resume-margin);
+  }
+
+  .resume-page,
+  .resume-preview-wrap {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+
+  .resume-sheet {
+    position: relative;
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: var(--resume-margin) !important;
+    box-sizing: border-box !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    overflow: visible !important;
+  }
+
+  .resume-page-break-after {
+    display: none !important;
+  }
+
+  .resume-section-bar {
+    background-color: #e8e6e1 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .resume-education-placeholder {
+    background-color: #fff8e6 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  a {
+    color: inherit !important;
+    text-decoration: none !important;
+  }
+
+  /* Keep hyperlinks active + visible in saved PDFs (Chrome/Edge Save as PDF) */
+  a.resume-contact-link,
+  a[href^="mailto:"],
+  a[href^="tel:"],
+  a[href^="http"] {
+    position: relative;
+    z-index: 1;
+    color: #1a5490 !important;
+    text-decoration: underline !important;
+    text-decoration-color: #6b8cae !important;
+  }
+}
