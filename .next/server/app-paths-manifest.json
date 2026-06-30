@@ -1,3 +1,4 @@
 {
-  "/resume/page": "app/resume/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/(version2)/page": "app/(version2)/page.js"
 }
