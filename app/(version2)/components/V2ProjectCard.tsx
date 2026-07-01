@@ -10,6 +10,7 @@ import { V2BorderCard } from "./V2BorderCard";
 import { V2CollapsiblePanel } from "./V2CollapsiblePanel";
 import { V2ImageLightbox } from "./V2ImageLightbox";
 import { V2LazyImage } from "./V2LazyImage";
+import { V2SkillGlassIcon } from "./V2SkillGlassIcon";
 
 export function V2ProjectCard({ project }: { project: PortfolioProject }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +42,10 @@ export function V2ProjectCard({ project }: { project: PortfolioProject }) {
                 </div>
                 {project.vibeCoded && (
                   <span className="v2-vibe-hint" title="AI-assisted development">
-                    <Sparkles className="w-3 h-3" aria-hidden="true" />
+                    <V2SkillGlassIcon
+                      className="v2-vibe-glass-icon"
+                      icon={<Sparkles className="w-3 h-3" />}
+                    />
                     vibe coded
                   </span>
                 )}

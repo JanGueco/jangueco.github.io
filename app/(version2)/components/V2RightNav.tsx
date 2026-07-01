@@ -56,10 +56,12 @@ export function V2RightNav({
 
   return (
     <nav className="v2-nav" aria-label="Section navigation">
-      <GlassIcons
-        items={items}
-        className="glass-icons--white glass-icons--compact glass-icons--horizontal v2-nav-icons"
-      />
+      <div className="v2-nav-dock">
+        <GlassIcons
+          items={items}
+          className="glass-icons--white glass-icons--compact glass-icons--horizontal v2-nav-icons"
+        />
+      </div>
     </nav>
   );
 }
